@@ -1,4 +1,4 @@
-package main
+package crosswordpuzzle
 
 import (
 	"fmt"
@@ -79,22 +79,47 @@ func createPuzzleToBeFilled(answerGrid [][]string) [][]string {
 	return workingPuzzle
 }
 
-func initializeGame(filePath string) (workingPuzzle [][]string, completedPuzzle [][]string) {
+type Clue struct {
+	orientaion string
+	clue       string
+	answer     string
+}
+type CrosswordPuzzle struct {
+	metaData map[string]string
+	puzzle   [][]string
+	clues    []Clue
+}
+
+// func metaDataFromFile(puzzleFileAsString string) map[string] {
+// 	metaData := make(map[string]string)
+
+// }
+
+func setTile(workingPuzzle [][]string, row int, col int, input string) ([][]string, error) {
+	nRows := len(workingPuzzle)
+
+	nCols := len(workingPuzzle[0])
+
+	if row < 0 || row >= nRows {
+		return workingPuzzle, fmt.Errorf("row invalid")
+	}
+
+	if col < 0 || col >= nCols {
+		return workingPuzzle, fmt.Errorf("column invalid")
+	}
+
+	if workingPuzzle[row][col] == "#" {
+		return workingPuzzle, fmt.Errorf("cant place tile on black square")
+	}
+
+	workingPuzzle[row][col] = input
+	return workingPuzzle, nil
+}
+
+func InitializeGame(filePath string) (workingPuzzle [][]string, completedPuzzle [][]string) {
 	puzzleAllData, _ := getCompletePuzzle(filePath)
 	onlyGrid := getPuzzle(puzzleAllData)
 	completedPuzzleReturn := createCompletedPuzzle(onlyGrid)
 	workingPuzzleReturn := createPuzzleToBeFilled(completedPuzzleReturn)
 	return workingPuzzleReturn, completedPuzzleReturn
-}
-
-func main() {
-	// abe, _ := getCompletePuzzle("gxd\\aarp\\1998\\mm1998-05-06.xd")
-	// bjørn := getPuzzle(abe)
-	// bi := createCompletedPuzzle(bjørn)
-	// fmt.Println(bi)
-
-	workingPuzzle, completedPuzzle := (initializeGame("gxd\\aarp\\1998\\mm1998-05-06.xd"))
-	fmt.Println(workingPuzzle)
-	fmt.Println("seperator")
-	fmt.Println(completedPuzzle)
 }
