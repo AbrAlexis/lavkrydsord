@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"lavkrydsord/backend/crosswordpuzzle"
+	crosswordpuzzle "lavkrydsord/backend/crosswordpuzzle"
 	"lavkrydsord/backend/jsonutils"
 )
 

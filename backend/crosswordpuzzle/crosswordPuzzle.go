@@ -1,9 +1,10 @@
-package crosswordpuzzle
+package crosswordPuzzle
 
 import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 )
 
 func copyStringSliceGrid(grid [][]string) [][]string {
@@ -30,17 +31,25 @@ func getCompletePuzzle(xdPuzzlePath string) (string, error) {
 	}
 }
 
-func getDimensions(puzzle string) (rows int, cols int) {
-	lines := regexp.MustCompile("\n").Split(puzzle, -1)
-	return len(lines), len(lines[0])
-	// return lines.len(), lines[0].len
-}
-
 func getPuzzle(completePuzzle string) string {
 	re := regexp.MustCompile(`(?s)\n\n\n(.*?)\n\n`)
 	found := re.FindStringSubmatch(completePuzzle)
 	grid := found[1]
 	return grid
+}
+
+func getDimensions(puzzle string) (rows int, cols int) {
+	lines := regexp.MustCompile("\n").Split(puzzle, -1)
+	return len(lines), len(lines[0])
+}
+
+func getMetaData(completePuzzleAsString string) string {
+	re := regexp.MustCompile(`(?m)^(.+\n){0,3}.+`)
+	found := re.FindStringSubmatch(completePuzzleAsString)[0]
+	return found
+}
+func createMetaDataList(metaDataAsString string) []string {
+	return regexp.MustCompile("\n").Split(metaDataAsString, -1)
 }
 
 func createCompletedPuzzle(completePuzzle string) [][]string {
@@ -79,21 +88,54 @@ func createPuzzleToBeFilled(answerGrid [][]string) [][]string {
 	return workingPuzzle
 }
 
+func getClues(completePuzzleAsString string) string {
+	re := regexp.MustCompile(`(?ms)^copyright:.*?\n\n(.*)`)
+	match := re.FindStringSubmatch(completePuzzleAsString)
+	return match[1]
+}
+
+func createCluesSlice(cluesAsString string) []Clue {
+	lines := regexp.MustCompile("\n").Split(cluesAsString, -1)
+	listOfClues := make([]Clue, len(lines))
+	clueRegex := regexp.MustCompile(`^([AD])(\d+)\.\s+(.*?)\s+~\s+([A-Z|]+)$`)
+
+	for i := range lines {
+		clue := clueRegex.FindStringSubmatch(lines[i])
+		number, _ := strconv.Atoi(clue[2])
+		listOfClues[i] = Clue{Orientation: clue[1], Number: number, Clue: clue[3], Answer: clue[4]}
+	}
+	return listOfClues
+}
+
 type Clue struct {
-	orientaion string
-	clue       string
-	answer     string
+	Orientation string
+	Number      int
+	Clue        string
+	Answer      string
 }
 type CrosswordPuzzle struct {
-	metaData map[string]string
+	metaData []string
 	puzzle   [][]string
 	clues    []Clue
 }
 
-// func metaDataFromFile(puzzleFileAsString string) map[string] {
-// 	metaData := make(map[string]string)
+func createCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
+	completePuzzleAsString, err := getCompletePuzzle(filepath)
+	if err != nil {
+		return CrosswordPuzzle{}, err
+	}
 
-// }
+	metaDataAsString := getMetaData(completePuzzleAsString)
+	metaData := createMetaDataList(metaDataAsString)
+
+	puzzle := getPuzzle(completePuzzleAsString)
+
+	cluesAsString := getClues(completePuzzleAsString)
+	clues := createCluesSlice(cluesAsString)
+
+	crosswordPuzzle := CrosswordPuzzle{metaData: metaData, puzzle: puzzle, clues: clues}
+
+}
 
 func setTile(workingPuzzle [][]string, row int, col int, input string) ([][]string, error) {
 	nRows := len(workingPuzzle)
@@ -119,7 +161,10 @@ func setTile(workingPuzzle [][]string, row int, col int, input string) ([][]stri
 func InitializeGame(filePath string) (workingPuzzle [][]string, completedPuzzle [][]string) {
 	puzzleAllData, _ := getCompletePuzzle(filePath)
 	onlyGrid := getPuzzle(puzzleAllData)
+	metaData := getMetaData(puzzleAllData)
+	metaDataToMap(metaData)
 	completedPuzzleReturn := createCompletedPuzzle(onlyGrid)
 	workingPuzzleReturn := createPuzzleToBeFilled(completedPuzzleReturn)
+
 	return workingPuzzleReturn, completedPuzzleReturn
 }
