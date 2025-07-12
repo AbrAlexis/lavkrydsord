@@ -22,6 +22,16 @@ func check(e error) {
 	}
 }
 
+func removeEmptyEntriesFromSlice(inputSlice []string) []string {
+	var sliceWithNoEmptyEntries []string
+	for i := range inputSlice {
+		if inputSlice[i] != "" {
+			sliceWithNoEmptyEntries = append(sliceWithNoEmptyEntries, inputSlice[i])
+		}
+	}
+	return sliceWithNoEmptyEntries
+}
+
 func getCompletePuzzle(xdPuzzlePath string) (string, error) {
 	puzzle, err := os.ReadFile(xdPuzzlePath)
 	if err != nil {
@@ -76,7 +86,7 @@ func createCompletedPuzzle(completePuzzle string) [][]string {
 	return answerGrid
 }
 
-func createPuzzleToBeFilled(answerGrid [][]string) [][]string {
+func createWorkingPuzzle(answerGrid [][]string) [][]string {
 	workingPuzzle := copyStringSliceGrid(answerGrid)
 	for i := range workingPuzzle {
 		for j := range workingPuzzle[i] {
@@ -89,13 +99,14 @@ func createPuzzleToBeFilled(answerGrid [][]string) [][]string {
 }
 
 func getClues(completePuzzleAsString string) string {
-	re := regexp.MustCompile(`(?ms)^copyright:.*?\n\n(.*)`)
+	re := regexp.MustCompile(`(?s)\n\n(A1.*)(\n\n)`)
 	match := re.FindStringSubmatch(completePuzzleAsString)
 	return match[1]
 }
 
 func createCluesSlice(cluesAsString string) []Clue {
-	lines := regexp.MustCompile("\n").Split(cluesAsString, -1)
+	rawLines := regexp.MustCompile("\n").Split(cluesAsString, -1)
+	lines := removeEmptyEntriesFromSlice(rawLines)
 	listOfClues := make([]Clue, len(lines))
 	clueRegex := regexp.MustCompile(`^([AD])(\d+)\.\s+(.*?)\s+~\s+([A-Z|]+)$`)
 
@@ -107,6 +118,27 @@ func createCluesSlice(cluesAsString string) []Clue {
 	return listOfClues
 }
 
+func IsPuzzleSolved(workingPuzzle [][]string, answerPuzzle [][]string) (bool, error) {
+	nRowWorking := len(workingPuzzle)
+	nColWorking := len(workingPuzzle[0])
+
+	nRowAnswer := len(answerPuzzle)
+	nColAnswer := len(answerPuzzle[0])
+
+	if nRowWorking != nRowAnswer || nColWorking != nColAnswer {
+		return false, fmt.Errorf("puzzles have different dimensions")
+	}
+
+	for i := range workingPuzzle {
+		for j := range workingPuzzle[0] {
+			if workingPuzzle[i][j] != answerPuzzle[i][j] {
+				return false, nil
+			}
+		}
+	}
+	return true, nil
+}
+
 type Clue struct {
 	Orientation string
 	Number      int
@@ -114,9 +146,9 @@ type Clue struct {
 	Answer      string
 }
 type CrosswordPuzzle struct {
-	metaData []string
-	puzzle   [][]string
-	clues    []Clue
+	MetaData []string
+	Puzzle   [][]string
+	Clues    []Clue
 }
 
 func createCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
@@ -128,16 +160,17 @@ func createCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
 	metaDataAsString := getMetaData(completePuzzleAsString)
 	metaData := createMetaDataList(metaDataAsString)
 
-	puzzle := getPuzzle(completePuzzleAsString)
+	puzzleAsString := getPuzzle(completePuzzleAsString)
+	puzzle := createCompletedPuzzle(puzzleAsString)
 
 	cluesAsString := getClues(completePuzzleAsString)
 	clues := createCluesSlice(cluesAsString)
 
-	crosswordPuzzle := CrosswordPuzzle{metaData: metaData, puzzle: puzzle, clues: clues}
-
+	crosswordPuzzle := CrosswordPuzzle{MetaData: metaData, Puzzle: puzzle, Clues: clues}
+	return crosswordPuzzle, nil
 }
 
-func setTile(workingPuzzle [][]string, row int, col int, input string) ([][]string, error) {
+func SetTile(workingPuzzle [][]string, row int, col int, input string) ([][]string, error) {
 	nRows := len(workingPuzzle)
 
 	nCols := len(workingPuzzle[0])
@@ -158,13 +191,33 @@ func setTile(workingPuzzle [][]string, row int, col int, input string) ([][]stri
 	return workingPuzzle, nil
 }
 
-func InitializeGame(filePath string) (workingPuzzle [][]string, completedPuzzle [][]string) {
-	puzzleAllData, _ := getCompletePuzzle(filePath)
-	onlyGrid := getPuzzle(puzzleAllData)
-	metaData := getMetaData(puzzleAllData)
-	metaDataToMap(metaData)
-	completedPuzzleReturn := createCompletedPuzzle(onlyGrid)
-	workingPuzzleReturn := createPuzzleToBeFilled(completedPuzzleReturn)
+func InitializeGame(filePath string) (workingPuzzle [][]string, completePuzzleStruct CrosswordPuzzle) {
 
-	return workingPuzzleReturn, completedPuzzleReturn
+	completePuzzleStructReturn, err := createCrosswordStructFromFile(filePath)
+
+	if err != nil {
+		fmt.Println("this shi fails")
+	}
+	workingPuzzleReturn := createWorkingPuzzle(completePuzzleStructReturn.Puzzle)
+	return workingPuzzleReturn, completePuzzleStructReturn
+}
+
+func Test(filepath string) {
+	completePuzzleString, _ := getCompletePuzzle(filepath)
+	cluesString := getClues(completePuzzleString)
+	cluesSlice := createCluesSlice(cluesString)
+	fmt.Println(cluesSlice)
+	// fmt.Println(cluesString)
+}
+
+func Test2(filepath string) {
+
+	workingPuzzle, puzzleStruct := InitializeGame(filepath)
+
+	fmt.Println("is puzzle solved?")
+	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleStruct.Puzzle))
+	SetTile(workingPuzzle, 0, 0, "A")
+	fmt.Println("is puzzle solved now?")
+	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleStruct.Puzzle))
+
 }
