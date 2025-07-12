@@ -146,9 +146,10 @@ type Clue struct {
 	Answer      string
 }
 type CrosswordPuzzle struct {
-	MetaData []string
-	Puzzle   [][]string
-	Clues    []Clue
+	MetaData       []string
+	PuzzleSolution [][]string
+	WorkingPuzzle  [][]string
+	Clues          []Clue
 }
 
 func createCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
@@ -160,17 +161,20 @@ func createCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
 	metaDataAsString := getMetaData(completePuzzleAsString)
 	metaData := createMetaDataList(metaDataAsString)
 
-	puzzleAsString := getPuzzle(completePuzzleAsString)
-	puzzle := createCompletedPuzzle(puzzleAsString)
+	puzzleSolutionAsString := getPuzzle(completePuzzleAsString)
+	puzzleSolution := createCompletedPuzzle(puzzleSolutionAsString)
+
+	workingPuzzle := createWorkingPuzzle(puzzleSolution)
 
 	cluesAsString := getClues(completePuzzleAsString)
 	clues := createCluesSlice(cluesAsString)
 
-	crosswordPuzzle := CrosswordPuzzle{MetaData: metaData, Puzzle: puzzle, Clues: clues}
+	crosswordPuzzle := CrosswordPuzzle{MetaData: metaData, PuzzleSolution: puzzleSolution, WorkingPuzzle: workingPuzzle, Clues: clues}
 	return crosswordPuzzle, nil
 }
 
 func SetTile(workingPuzzle [][]string, row int, col int, input string) ([][]string, error) {
+
 	nRows := len(workingPuzzle)
 
 	nCols := len(workingPuzzle[0])
@@ -191,33 +195,35 @@ func SetTile(workingPuzzle [][]string, row int, col int, input string) ([][]stri
 	return workingPuzzle, nil
 }
 
-func InitializeGame(filePath string) (workingPuzzle [][]string, completePuzzleStruct CrosswordPuzzle) {
+func InitializeGame(filePath string) (completePuzzleStruct CrosswordPuzzle) {
 
 	completePuzzleStructReturn, err := createCrosswordStructFromFile(filePath)
 
 	if err != nil {
-		fmt.Println("this shi fails")
+		fmt.Println("faile initializing game")
 	}
-	workingPuzzleReturn := createWorkingPuzzle(completePuzzleStructReturn.Puzzle)
-	return workingPuzzleReturn, completePuzzleStructReturn
+	return completePuzzleStructReturn
 }
 
-func Test(filepath string) {
-	completePuzzleString, _ := getCompletePuzzle(filepath)
-	cluesString := getClues(completePuzzleString)
-	cluesSlice := createCluesSlice(cluesString)
-	fmt.Println(cluesSlice)
-	// fmt.Println(cluesString)
-}
+// func Test(filepath string) {
+// 	completePuzzleString, _ := getCompletePuzzle(filepath)
+// 	cluesString := getClues(completePuzzleString)
+// 	cluesSlice := createCluesSlice(cluesString)
+// 	fmt.Println(cluesSlice)
+// 	// fmt.Println(cluesString)
+// }
 
 func Test2(filepath string) {
 
-	workingPuzzle, puzzleStruct := InitializeGame(filepath)
+	puzzleStruct := InitializeGame(filepath)
+
+	puzzleSolution := puzzleStruct.PuzzleSolution
+	workingPuzzle := puzzleStruct.WorkingPuzzle
 
 	fmt.Println("is puzzle solved?")
-	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleStruct.Puzzle))
+	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleSolution))
 	SetTile(workingPuzzle, 0, 0, "A")
 	fmt.Println("is puzzle solved now?")
-	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleStruct.Puzzle))
+	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleSolution))
 
 }

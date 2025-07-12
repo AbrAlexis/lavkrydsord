@@ -1,0 +1,21 @@
+#working-puzzle-grid {
+    display: grid;
+    gap: 0px;
+    margin-top: 50px;
+    justify-content: start;
+  }
+  
+  .puzzle-cell {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    font-family: monospace;
+  }
+  
+  .blank {
+    background-color: black;
+  }

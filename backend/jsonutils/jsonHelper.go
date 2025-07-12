@@ -2,14 +2,16 @@ package jsonutils
 
 import (
 	"encoding/json"
-	"fmt"
 	crosswordPuzzle "lavkrydsord/backend/crosswordpuzzle"
+	"net/http"
 )
 
-func MarshallPuzzle(crosswordPuzzleStruct crosswordPuzzle.CrosswordPuzzle) ([]byte, error) {
-	marshalled, err := json.Marshal(abe.Puzzle)
+func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzleStruct crosswordPuzzle.CrosswordPuzzle) {
+	marshalled, err := json.Marshal(crosswordPuzzleStruct)
 	if err != nil {
-		return nil, fmt.Errorf("marshall went wrong")
+		http.Error(w, "Failed to marshal puzzle", http.StatusInternalServerError)
+		return
 	}
-	return marshalled, nil
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(marshalled)
 }
