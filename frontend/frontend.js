@@ -5,7 +5,7 @@ window.onload = async function () {
         if (!response.ok) throw new Error("Failed to fetch puzzle");
         const puzzleData = await response.json();
             
-        const workingPuzzle = puzzleData.WorkingPuzzle
+        const workingPuzzle = puzzleData.PuzzleSolution;
         console.log("Puzzle received:", puzzleData);
     
         const grid = document.getElementById("working-puzzle-grid");
@@ -14,21 +14,29 @@ window.onload = async function () {
         const cols = workingPuzzle[0].length;
       
         grid.style.gridTemplateColumns = `repeat(${cols}, 30px)`;
-      
+        
+        var clueCounter = 1;
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < cols; col++) {
-                const div = document.createElement("div");
-                div.classList.add("puzzle-cell");
-        
-                if (workingPuzzle[row][col] === "#") {
+              const div = document.createElement("div");
+              div.classList.add("puzzle-cell");
+              
+              if (workingPuzzle[row][col] === "#") {
                 div.classList.add("blank");
-                } else {
-                div.textContent = workingPuzzle[row][col];
+              } else {
+                if (row === 0 || col === 0 || workingPuzzle [row - 1][col] === "#" || workingPuzzle [row][col - 1] === "#") {
+                    const clueNumber = document.createElement("span");
+                    clueNumber.classList.add("clue-number");
+                    clueNumber.textContent = clueCounter;
+                    div.appendChild(clueNumber);
+                    clueCounter++;
                 }
-        
-                grid.appendChild(div);
+                div.appendChild(document.createTextNode(workingPuzzle[row][col]));
+              }
+              
+              grid.appendChild(div);
+            }
           }
-        }
       
       
 
