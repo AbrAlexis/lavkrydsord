@@ -33,7 +33,9 @@ window.onload = async function () {
                     clueCounter++;
                 }
                 div.addEventListener("click", function(){
-                  console.log(document.getElementById("working-puzzle-grid"));
+                  if (div.style.backgroundColor === "salmon") {
+                    div.style.backgroundColor = "white";
+                  }
                 });
 
                 

@@ -8,23 +8,11 @@ import (
 	"net/http"
 )
 
-// func main() {
-// 	// crosswordpuzzle.Test2("/home/abralexis/lavkrydsord/gxd/aarp/1998/mm1998-05-06.xd")
-// 	// crosswordpuzzle.Test2("/home/abralexis/lavkrydsord/test.xd")
-// 	// workingPuzzle, completedPuzzle := (crosswordpuzzle.InitializeGame("/home/abralexis/lavkrydsord/gxd/aarp/1998/mm1998-05-06.xd"))
-// 	// fmt.Println(workingPuzzle)
-// 	// fmt.Println("seperator")
-// 	// fmt.Println(completedPuzzle)
-// 	_, complete := crosswordPuzzle.InitializeGame("/home/abralexis/lavkrydsord/test.xd")
-// 	fmt.Println(jsonutils.MarshallPuzzle(complete))
-
-// }
-
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("./frontend")))
 
 	http.HandleFunc("/puzzle", func(w http.ResponseWriter, r *http.Request) {
-		crosswordPuzzleStruct := crosswordPuzzle.InitializeGame("//home/abralexis/lavkrydsord/gxd/bostonglobe/1982/bg1982-03-14.xd")
+		crosswordPuzzleStruct := crosswordPuzzle.InitializeGame("/home/abralexis/lavkrydsord/gxd/usatoday/2025/usa2025-06-06.xd")
 
 		jsonutils.MarshallPuzzleStruct(w, r, crosswordPuzzleStruct)
 	})
