@@ -24,7 +24,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./frontend")))
 
 	http.HandleFunc("/puzzle", func(w http.ResponseWriter, r *http.Request) {
-		crosswordPuzzleStruct := crosswordPuzzle.InitializeGame("/home/abralexis/lavkrydsord/gxd/crossroads/1999/atc1999-07-12.xd")
+		crosswordPuzzleStruct := crosswordPuzzle.InitializeGame("//home/abralexis/lavkrydsord/gxd/bostonglobe/1982/bg1982-03-14.xd")
 
 		jsonutils.MarshallPuzzleStruct(w, r, crosswordPuzzleStruct)
 	})

@@ -16,12 +16,6 @@ func copyStringSliceGrid(grid [][]string) [][]string {
 	return copyGrid
 }
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func removeEmptyEntriesFromSlice(inputSlice []string) []string {
 	var sliceWithNoEmptyEntries []string
 	for i := range inputSlice {

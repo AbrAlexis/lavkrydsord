@@ -29,3 +29,33 @@
     font-weight: normal;
     line-height: 1;
     color: black;}
+  
+  .cell-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    background: none;
+    outline: none;
+    font-family: monospace;    
+    text-transform: uppercase;
+  }
+
+  
+#clues {
+  position: absolute;
+  display: block;
+  left: 70vw;
+  top: 0vw;
+
+}
+
+#puzzle-checker {
+  position: absolute;
+  left: 50vw;
+  top: 10vw;
+}
+
+  
