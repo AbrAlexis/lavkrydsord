@@ -44,24 +44,7 @@ window.onload = async function () {
                 input.maxLength = 1; // only allow one letter
                 input.classList.add("cell-input");
                 div.appendChild(input);
-                document.getElementById("puzzle-checker-button").addEventListener("click", () => {
-                  let htmlCounter = 0;
-                  for (let row = 0; row < rows; row++) {
-                    for (let col = 0; col < cols; col++) {
-                      
-                      if (workingPuzzle[row][col] === "#") {
-                        htmlCounter++;
-                        continue;
-                      }
-                      let currentCellValue = document.getElementById("working-puzzle-grid").children[htmlCounter].lastChild.value;
-                      if (currentCellValue.toUpperCase() !== puzzleData.PuzzleSolution[row][col] && currentCellValue.toUpperCase() !== "") {
-                        document.getElementById("working-puzzle-grid").children[htmlCounter].style.backgroundColor = "salmon";
-                      }
-                      htmlCounter++;                      
-                    }
-                    
-                  }
-                });
+
               }
               
               grid.appendChild(div);
@@ -80,7 +63,24 @@ window.onload = async function () {
 
   
 
-
+      document.getElementById("puzzle-checker-button").addEventListener("click", () => {
+        let htmlCounter = 0;
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            
+            if (workingPuzzle[row][col] === "#") {
+              htmlCounter++;
+              continue;
+            }
+            let currentCellValue = document.getElementById("working-puzzle-grid").children[htmlCounter].lastChild.value;
+            if (currentCellValue.toUpperCase() !== puzzleData.PuzzleSolution[row][col] && currentCellValue.toUpperCase() !== "") {
+              document.getElementById("working-puzzle-grid").children[htmlCounter].style.backgroundColor = "salmon";
+            }
+            htmlCounter++;                      
+          }
+          
+        }
+      });
     } catch (err) {
         console.error(err);
         document.getElementById("working-puzzle-grid").textContent = "Error loading puzzle.";
