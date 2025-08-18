@@ -189,6 +189,26 @@ func SetTile(workingPuzzle [][]string, row int, col int, input string) ([][]stri
 	return workingPuzzle, nil
 }
 
+type Coord struct {
+	Row int `json:"row"`
+	Col int `json:"col"`
+}
+
+func checkPuzzle(workingPuzzle, puzzleSolution [][]string) []Coord {
+	var mistakes []Coord
+	for i := range workingPuzzle {
+		for j := range workingPuzzle[i] {
+			if workingPuzzle[i][j] == "" || workingPuzzle[i][j] == "#" {
+				continue
+			}
+			if workingPuzzle[i][j] != puzzleSolution[i][j] {
+				mistakes = append(mistakes, Coord{Row: i, Col: j})
+			}
+		}
+	}
+	return mistakes
+}
+
 func InitializeGame(filePath string) (completePuzzleStruct CrosswordPuzzle) {
 
 	completePuzzleStructReturn, err := createCrosswordStructFromFile(filePath)
