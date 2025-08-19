@@ -9,10 +9,10 @@ import (
 )
 
 func main() {
-	http.Handle("/", http.FileServer(http.Dir("./frontend")))
+	http.Handle("/", http.FileServer(http.Dir(".\\frontend")))
 
 	http.HandleFunc("/puzzle", func(w http.ResponseWriter, r *http.Request) {
-		crosswordPuzzleStruct := crosswordPuzzle.InitializeGame("/home/abralexis/lavkrydsord/gxd/usatoday/2025/usa2025-06-06.xd")
+		crosswordPuzzleStruct := crosswordPuzzle.InitializeGame("C:\\Users\\Default User.DESKTOP-F6CKQMA\\OneDrive\\Skrivebord\\lavkrydsord\\gxd\\aarp\\1998\\mm1998-05-06.xd")
 
 		jsonutils.MarshallPuzzleStruct(w, r, crosswordPuzzleStruct)
 	})

@@ -64,6 +64,7 @@ window.onload = async function () {
   
 
       document.getElementById("puzzle-checker-button").addEventListener("click", () => {
+
         let htmlCounter = 0;
         for (let row = 0; row < rows; row++) {
           for (let col = 0; col < cols; col++) {
@@ -81,6 +82,7 @@ window.onload = async function () {
           
         }
       });
+
     } catch (err) {
         console.error(err);
         document.getElementById("working-puzzle-grid").textContent = "Error loading puzzle.";
@@ -89,4 +91,28 @@ window.onload = async function () {
 
 
 
+function marshalPuzzle(workingPuzzle) {
+  const grid = document.getElementById("working-puzzle-grid");
+  
+  const nRows = workingPuzzle.length;
+  const nCols = workingPuzzle[0].length;
 
+  const result = [];
+  let htmlCounter = 0;
+
+  for (let row = 0; row < nRows; row++) {
+    const rowArray = [];
+      for (let col = 0; col < nCols; col++) {
+        if (workingPuzzle[row][col] === "#" ) {
+          rowArray.push("#");
+          htmlCounter++;
+        } else {
+          rowArray.push(grid.children[htmlCounter].lastChild.value.toUpperCase());
+          htmlCounter++;
+        } 
+
+      }
+    result.push(rowArray);
+  }
+  return JSON.stringify(result)
+}
