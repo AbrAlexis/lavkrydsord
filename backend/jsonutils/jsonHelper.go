@@ -15,3 +15,9 @@ func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzl
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(marshalled)
 }
+
+func HandleCheckPuzzle(w http.ResponseWriter, r *http.Request) {
+	var req [][]string
+	json.NewDecoder(r.Body).Decode(&req)
+
+}

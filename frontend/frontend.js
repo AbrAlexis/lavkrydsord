@@ -82,6 +82,14 @@ window.onload = async function () {
           
         }
       });
+      document.getElementById("marshall-tester-button").addEventListener("click", () => {
+        const payload = marshalPuzzle(workingPuzzle);
+        fetch("/puzzle/answer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payload
+        });
+      });
 
     } catch (err) {
         console.error(err);

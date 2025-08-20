@@ -194,7 +194,7 @@ type Coord struct {
 	Col int `json:"col"`
 }
 
-func checkPuzzle(workingPuzzle, puzzleSolution [][]string) []Coord {
+func CheckPuzzle(workingPuzzle, puzzleSolution [][]string) []Coord {
 	var mistakes []Coord
 	for i := range workingPuzzle {
 		for j := range workingPuzzle[i] {
