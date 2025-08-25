@@ -6,6 +6,7 @@ window.onload = async function () {
         const puzzleData = await response.json();
             
         const workingPuzzle = puzzleData.WorkingPuzzle;
+        const testVariable = "test1";
         console.log("Puzzle received:", puzzleData);
     
         const grid = document.getElementById("working-puzzle-grid");
@@ -84,7 +85,7 @@ window.onload = async function () {
       });
       document.getElementById("marshall-tester-button").addEventListener("click", () => {
         const payload = marshalPuzzle(workingPuzzle);
-        fetch("/puzzle/answer", {
+        fetch("/puzzle/" + testVariable, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: payload

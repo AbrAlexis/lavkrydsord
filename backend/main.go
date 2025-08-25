@@ -18,7 +18,7 @@ func main() {
 		jsonutils.MarshallPuzzleStruct(w, r, crosswordPuzzleStruct)
 	})
 
-	http.HandleFunc("/puzzle/answer", jsonutils.HandleCheckPuzzle)
+	http.HandleFunc("/puzzle/test1", jsonutils.HandleCheckPuzzle)
 
 	fmt.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

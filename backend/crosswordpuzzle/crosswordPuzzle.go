@@ -56,7 +56,7 @@ func createMetaDataList(metaDataAsString string) []string {
 	return regexp.MustCompile("\n").Split(metaDataAsString, -1)
 }
 
-func createCompletedPuzzle(completePuzzle string) [][]string {
+func CreateCompletedPuzzle(completePuzzle string) [][]string {
 	nRows, nCols := getDimensions(completePuzzle)
 	//Create the empty puzzle grid, later to be filled out
 	answerGrid := make([][]string, nRows)
@@ -146,7 +146,7 @@ type CrosswordPuzzle struct {
 	Clues          []Clue
 }
 
-func createCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
+func CreateCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
 	completePuzzleAsString, err := getCompletePuzzle(filepath)
 	if err != nil {
 		return CrosswordPuzzle{}, err
