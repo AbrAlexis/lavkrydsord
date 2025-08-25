@@ -56,7 +56,7 @@ func createMetaDataList(metaDataAsString string) []string {
 	return regexp.MustCompile("\n").Split(metaDataAsString, -1)
 }
 
-func CreateCompletedPuzzle(completePuzzle string) [][]string {
+func createCompletedPuzzle(completePuzzle string) [][]string {
 	nRows, nCols := getDimensions(completePuzzle)
 	//Create the empty puzzle grid, later to be filled out
 	answerGrid := make([][]string, nRows)

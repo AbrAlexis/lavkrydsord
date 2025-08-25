@@ -20,7 +20,7 @@ func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzl
 func HandleCheckPuzzle(w http.ResponseWriter, r *http.Request) {
 	var req [][]string
 	json.NewDecoder(r.Body).Decode(&req)
-	w.Header().Set("Content-Type", "application/json")	
+	w.Header().Set("Content-Type", "application/json")
 	puzzleStruct, err := crosswordPuzzle.CreateCrosswordStructFromFile("C:\\Users\\Default User.DESKTOP-F6CKQMA\\OneDrive\\Skrivebord\\lavkrydsord\\TestPuzzles\\test1.xd")
 	if err != nil {
 		fmt.Errorf("Fail in json helper")
@@ -32,3 +32,4 @@ func HandleCheckPuzzle(w http.ResponseWriter, r *http.Request) {
 		fmt.Errorf("marshalling failed")
 	}
 	w.Write(marshalled)
+}
