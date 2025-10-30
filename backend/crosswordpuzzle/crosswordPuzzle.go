@@ -211,7 +211,7 @@ func CheckPuzzle(workingPuzzle, puzzleSolution [][]string) []Coord {
 
 func InitializeGame(filePath string) (completePuzzleStruct CrosswordPuzzle) {
 
-	completePuzzleStructReturn, err := createCrosswordStructFromFile(filePath)
+	completePuzzleStructReturn, err := CreateCrosswordStructFromFile(filePath)
 
 	if err != nil {
 		fmt.Println("faile initializing game")

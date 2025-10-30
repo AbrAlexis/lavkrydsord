@@ -77,20 +77,34 @@ window.onload = async function () {
             let currentCellValue = document.getElementById("working-puzzle-grid").children[htmlCounter].lastChild.value;
             if (currentCellValue.toUpperCase() !== puzzleData.PuzzleSolution[row][col] && currentCellValue.toUpperCase() !== "") {
               document.getElementById("working-puzzle-grid").children[htmlCounter].style.backgroundColor = "salmon";
+            } 
+            else {
+              
             }
             htmlCounter++;                      
           }
           
         }
       });
-      document.getElementById("marshall-tester-button").addEventListener("click", () => {
-        const payload = marshalPuzzle(workingPuzzle);
-        fetch("/puzzle/" + testVariable, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: payload
-        });
-      });
+document.getElementById("marshall-tester-button").addEventListener("click", async () => {
+  const payload = marshalPuzzle(workingPuzzle);
+
+  try {
+    const response = await fetch("/puzzle/" + testVariable, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload
+    });
+
+    console.log("Raw response:", response);
+
+    const data = await response.json(); // or response.text() if not JSON
+    console.log("Parsed data:", data);
+
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+});
 
     } catch (err) {
         console.error(err);
