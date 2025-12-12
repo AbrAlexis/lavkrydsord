@@ -6,6 +6,7 @@ import (
 	crosswordPuzzle "lavkrydsord/backend/crosswordpuzzle"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzleStruct crosswordPuzzle.CrosswordPuzzle) {
@@ -38,7 +39,17 @@ func HandleCheckPuzzle(w http.ResponseWriter, r *http.Request) {
 func HandleFrontpage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	files, err := os.ReadDir("../homemadePuzzles")
+	exe, err := os.Executable()
+	if err != nil {
+		fmt.Errorf("could not get executable path")
+	}
+	fmt.Printf(exe + "\n")
+	exeDir := filepath.Dir(exe)
+	fmt.Printf(exeDir + "\n")
+
+	puzzlesFolderPath := filepath.Join(exeDir, "homemadePuzzles")
+	fmt.Printf(puzzlesFolderPath + "\n")
+	files, err := os.ReadDir(puzzlesFolderPath)
 	if err != nil {
 		fmt.Errorf("could not read directory")
 	}
