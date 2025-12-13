@@ -4,8 +4,23 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  type pingResponse = string
+  
+  async function ping() {
+    try {
+      const response: Response = await fetch('/api/ping')
+      if (!response.ok) {
+        throw new Error(response.statusText)
+      }
+      const result: pingResponse = await response.json()
+      console.log("Parsed result: ", result)
+      return result;
+    } catch (error) {
+      console.error(error)
+    }
+
+  }
   return (
     <>
       <div>
@@ -18,8 +33,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={() => ping()}>
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR

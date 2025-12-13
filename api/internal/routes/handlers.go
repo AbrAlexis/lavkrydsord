@@ -10,7 +10,10 @@ import (
 )
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("pong"))
+	pong := "pong"
+	w.Header().Set("Content-Type", "application/json")
+	mString, _ := json.Marshal(pong)
+	w.Write(mString)
 }
 
 func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzleStruct crosswordPuzzle.CrosswordPuzzle) {
