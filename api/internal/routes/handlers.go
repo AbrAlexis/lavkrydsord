@@ -3,6 +3,8 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"lavkrydsord/internal/db"
 	crosswordPuzzle "lavkrydsord/model"
 	"net/http"
 	"os"
@@ -16,6 +18,23 @@ func PingHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(mString)
 }
 
+func UploadPuzzleHandler(w http.ResponseWriter, r *http.Request) {
+	file, _, err := r.FormFile("textfile")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+	fileBytes, err := io.ReadAll(file)
+	fileAsString := string(fileBytes)
+	dbErr := db.InsertPuzzle(fileAsString)
+	if dbErr != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(fileBytes)
+}
 func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzleStruct crosswordPuzzle.CrosswordPuzzle) {
 	marshalled, err := json.Marshal(crosswordPuzzleStruct)
 	if err != nil {

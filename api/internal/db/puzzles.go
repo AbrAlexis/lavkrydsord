@@ -4,9 +4,9 @@ import (
 	"log"
 )
 
-func insertPuzzle(xdPuzzle string) error {
+func InsertPuzzle(fileAsString string) error {
 	_, err := DB().Exec("INSERT INTO puzzles (xdPuzzle) VALUES (?)",
-		xdPuzzle,
+		fileAsString,
 	)
 	if err != nil {
 		log.Fatal(err)

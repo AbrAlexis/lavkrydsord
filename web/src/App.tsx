@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   type pingResponse = string
   
   async function ping() {
@@ -19,8 +19,44 @@ function App() {
     } catch (error) {
       console.error(error)
     }
-
   }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    setSelectedFile(file);
+  };
+
+  async function handleFileUpload(event: React.FormEvent) {
+    event.preventDefault();
+
+    if (!selectedFile) {
+      console.error('No file selected');
+      return;
+    }
+    if (selectedFile.size > 1000000) { 
+      alert("File is too large for this method.");
+      return;
+    }
+
+
+
+    const formData = new FormData();  
+    formData.append('textfile', selectedFile); 
+
+    try {
+      const response = await fetch('/api/uploadpuzzle', {
+          method: 'POST', 
+          body: formData, 
+      });
+      if (!response.ok) {
+          throw new Error(response.statusText);
+      } else {
+          console.log('File uploaded successfully');
+      }
+    } catch (error) {
+    }
+};
+  
+
   return (
     <>
       <div>
@@ -39,11 +75,21 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <form onSubmit={handleFileUpload}>
+        <h3>Upload Puzzle File (.txt)</h3>
+        <input 
+            type="file"
+            accept=".txt,.text, .xd"
+            onChange={handleFileChange}
+            style={{ marginBottom: '10px' }}
+        />
+        <button type="submit" disabled={!selectedFile}>
+            Post to DB
+        </button>
+        </form>
     </>
   )
 }
+
 
 export default App

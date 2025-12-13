@@ -12,7 +12,6 @@ func NewRouter() *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	// optional: CORS for frontend
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:5173"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -22,6 +21,6 @@ func NewRouter() *chi.Mux {
 
 	// attach handlers
 	r.Get("/api/ping", PingHandler)
-
+	r.Post("/api/uploadpuzzle", UploadPuzzleHandler)
 	return r
 }
