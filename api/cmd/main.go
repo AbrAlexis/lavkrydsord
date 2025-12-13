@@ -1,13 +1,12 @@
-package cmd
+package main
 
 import (
 	"log"
 	"net/http"
 
-	"lavkrydsord/api/internal/db"
+	"lavkrydsord/internal/db"
 
-	chi "github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"lavkrydsord/internal/routes"
 )
 
 func main() {
@@ -15,10 +14,7 @@ func main() {
 	db.Migrate()
 	defer db.DB().Close()
 
-	r := chi.NewRouter()
-
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
+	r := routes.NewRouter()
 
 	r.Handle("/*", http.FileServer(http.Dir("./static")))
 

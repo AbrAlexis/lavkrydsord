@@ -1,4 +1,4 @@
-package crosswordPuzzle
+package model
 
 import (
 	"fmt"

@@ -1,68 +1,27 @@
-package jsonutils
+package routes
 
 import (
-	"encoding/json"
-	"fmt"
-	crosswordPuzzle "lavkrydsord/backend/crosswordpuzzle"
-	"net/http"
-	"os"
-	"path/filepath"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 )
 
-func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzleStruct crosswordPuzzle.CrosswordPuzzle) {
-	marshalled, err := json.Marshal(crosswordPuzzleStruct)
-	if err != nil {
-		http.Error(w, "Failed to marshal puzzle", http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(marshalled)
-}
+func NewRouter() *chi.Mux {
+	r := chi.NewRouter()
 
-func HandleCheckPuzzle(w http.ResponseWriter, r *http.Request) {
-	var req [][]string
-	json.NewDecoder(r.Body).Decode(&req)
-	w.Header().Set("Content-Type", "application/json")
-	puzzleStruct, err := crosswordPuzzle.CreateCrosswordStructFromFile("/home/abralexis/lavkrydsord/test.xd")
-	if err != nil {
-		fmt.Errorf("Fail in json helper")
-	}
-	solutionGrid := puzzleStruct.PuzzleSolution
-	puzzleErrors := crosswordPuzzle.CheckPuzzle(req, solutionGrid)
-	marshalled, err := json.Marshal(puzzleErrors)
-	if err != nil {
-		fmt.Errorf("marshalling failed")
-	}
-	w.Write(marshalled)
-}
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
-func HandleFrontpage(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	// optional: CORS for frontend
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}))
 
-	exe, err := os.Executable()
-	if err != nil {
-		fmt.Errorf("could not get executable path")
-	}
-	fmt.Printf(exe + "\n")
-	exeDir := filepath.Dir(exe)
-	fmt.Printf(exeDir + "\n")
+	// attach handlers
+	r.Get("/api/ping", PingHandler)
 
-	puzzlesFolderPath := filepath.Join(exeDir, "homemadePuzzles")
-	fmt.Printf(puzzlesFolderPath + "\n")
-	files, err := os.ReadDir(puzzlesFolderPath)
-	if err != nil {
-		fmt.Errorf("could not read directory")
-	}
-
-	for _, file := range files {
-		fmt.Println(file.Name())
-	}
-	fmt.Println(len(files))
-
-	marshalled, err := json.Marshal(files)
-	if err != nil {
-		fmt.Errorf("marshalling failed")
-	}
-
-	w.Write(marshalled)
+	return r
 }
