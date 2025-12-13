@@ -1,3 +1,11 @@
+*.db
+.env
+*.xd
+main
+*.exe
+*.test
+*.out
+
 # Logs
 logs
 *.log
