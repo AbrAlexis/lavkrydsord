@@ -36,8 +36,12 @@ func UploadPuzzleHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(fileBytes)
 }
 
-func getPuzzlesHandler(w http.ResponseWriter, r *http.Request) {
-	puzzles := db.GetPuzzles()
+func getPuzzlesMetaDataHandler(w http.ResponseWriter, r *http.Request) {
+	puzzles, err := db.GetPuzzlesMetaData()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	marshalled, err := json.Marshal(puzzles)
 	if err != nil {
 		http.Error(w, "Failed to marshal puzzle", http.StatusInternalServerError)
