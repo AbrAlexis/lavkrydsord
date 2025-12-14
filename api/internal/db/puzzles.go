@@ -13,3 +13,21 @@ func InsertPuzzle(fileAsString string) error {
 	}
 	return err
 }
+
+func GetPuzzles() []string {
+	rows, err := DB().Query("SELECT * FROM puzzles")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	var puzzles []string
+	for rows.Next() {
+		var puzzle string
+		var id int
+		if err := rows.Scan(&id, &puzzle); err != nil {
+			log.Fatal(err)
+		}
+		puzzles = append(puzzles, puzzle)
+	}
+	return puzzles
+}

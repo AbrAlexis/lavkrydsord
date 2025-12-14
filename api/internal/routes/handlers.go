@@ -35,6 +35,17 @@ func UploadPuzzleHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(fileBytes)
 }
+
+func getPuzzlesHandler(w http.ResponseWriter, r *http.Request) {
+	puzzles := db.GetPuzzles()
+	marshalled, err := json.Marshal(puzzles)
+	if err != nil {
+		http.Error(w, "Failed to marshal puzzle", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(marshalled)
+}
 func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzleStruct crosswordPuzzle.CrosswordPuzzle) {
 	marshalled, err := json.Marshal(crosswordPuzzleStruct)
 	if err != nil {
