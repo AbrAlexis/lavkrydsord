@@ -1,7 +1,6 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import Overview from "./Overview";
 
 function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -56,6 +55,7 @@ function App() {
   return (
     <>
       <h1>Lav Krydsord</h1>
+      <Overview />
       <div className="card">
         <button onClick={() => ping()}>ping!</button>
       </div>
