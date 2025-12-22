@@ -9,33 +9,34 @@ interface PuzzleMetaData {
 
 function Overview() {
   const [metaData, setMetaData] = useState<PuzzleMetaData[]>([]);
-
   useEffect(() => {
-    async function fetchMetadata() {
-      try {
-        const response = await fetch("/api/metadata", {
-          method: "GET",
-        });
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        } else {
-          const result = await response.json();
-          const mappedResult: PuzzleMetaData[] = result.map((p: any) => ({
-            id: p.ID,
-            title: p.Title,
-            author: p.Author,
-            date: p.Date,
-          }));
-          setMetaData(mappedResult);
-          console.log("Fetched metadata successfully");
-        }
-      } catch (error) {}
-    }
     fetchMetadata();
   }, []);
 
+  async function fetchMetadata() {
+    try {
+      const response = await fetch("/api/metadata", {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      } else {
+        const result = await response.json();
+        const mappedResult: PuzzleMetaData[] = result.map((p: any) => ({
+          id: p.ID,
+          title: p.Title,
+          author: p.Author,
+          date: p.Date,
+        }));
+        setMetaData(mappedResult);
+        console.log("Fetched metadata successfully");
+      }
+    } catch (error) {}
+  }
+
   return (
     <>
+      <button onClick={() => fetchMetadata()}>refresh</button>
       <table>
         <thead>
           <tr>
