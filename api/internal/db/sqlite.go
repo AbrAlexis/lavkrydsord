@@ -13,7 +13,7 @@ var database *sql.DB
 func Init() {
 	path := os.Getenv("SQLITE_PATH")
 	if path == "" {
-		path = "app.db" // sensible default for local dev
+		path = "/app/data/app.db"
 	}
 
 	db, err := sql.Open("sqlite3", path)
