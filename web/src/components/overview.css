@@ -1,0 +1,17 @@
+.puzzle-table {
+  border-collapse: collapse;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+.puzzle-table th, 
+.puzzle-table td {
+  border: 1px solid black;
+  text-align: left;
+}
+
+.clickable-row {
+  cursor: pointer;
+}

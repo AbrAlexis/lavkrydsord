@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import "./overview.css";
 interface PuzzleMetaData {
   id: number;
   title: string;
@@ -31,32 +31,44 @@ function Overview() {
         setMetaData(mappedResult);
         console.log("Fetched metadata successfully");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching metadata:", error);
+    }
+  }
+
+  function handleRowClick(puzzleId: number) {
+    console.log("Row clicked for puzzle ID:", puzzleId);
   }
 
   return (
     <>
       <button onClick={() => fetchMetadata()}>refresh</button>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {metaData.map((puzzle) => (
-            <tr key={puzzle.id}>
-              <td>{puzzle.id}</td>
-              <td>{puzzle.title}</td>
-              <td>{puzzle.author}</td>
-              <td>{puzzle.date}</td>
+      <div className="puzzle-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {metaData.map((puzzle) => (
+              <tr
+                key={puzzle.id}
+                onClick={() => handleRowClick(puzzle.id)}
+                className="clickable-row"
+              >
+                <td>{puzzle.id}</td>
+                <td>{puzzle.title}</td>
+                <td>{puzzle.author}</td>
+                <td>{puzzle.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
