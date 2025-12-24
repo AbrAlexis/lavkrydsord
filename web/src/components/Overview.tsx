@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Overview.css";
 interface PuzzleMetaData {
   id: number;
@@ -9,6 +10,7 @@ interface PuzzleMetaData {
 
 function Overview() {
   const [metaData, setMetaData] = useState<PuzzleMetaData[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
     fetchMetadata();
   }, []);
@@ -43,6 +45,7 @@ function Overview() {
   return (
     <>
       <button onClick={() => fetchMetadata()}>refresh</button>
+      <button onClick={() => navigate("/upload")}>upload</button>
       <div className="puzzle-table">
         <table>
           <thead>

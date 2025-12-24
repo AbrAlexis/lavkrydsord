@@ -1,0 +1,6 @@
+.logo{
+  cursor: pointer;
+  position: absolute;
+  top: calc(5vh);
+  left: calc(5vw);
+}

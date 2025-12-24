@@ -55,7 +55,6 @@ function UploadPuzzle() {
   return (
     <>
       <button onClick={() => ping()}>ping!</button>
-      <button onClick={() => navigate("/")}>back to homepage</button>
       <form onSubmit={handleFileUpload}>
         <h3>Upload Puzzle File (.txt)</h3>
         <input
