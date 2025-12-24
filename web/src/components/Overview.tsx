@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./overview.css";
+import "./Overview.css";
 interface PuzzleMetaData {
   id: number;
   title: string;
