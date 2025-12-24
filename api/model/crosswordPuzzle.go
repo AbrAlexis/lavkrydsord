@@ -167,6 +167,22 @@ func CreateCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
 	return crosswordPuzzle, nil
 }
 
+func CreateCrosswordStructFromString(completePuzzleAsString string) (CrosswordPuzzle, error) {
+	metaDataAsString := getMetaData(completePuzzleAsString)
+	metaData := createMetaDataList(metaDataAsString)
+
+	puzzleSolutionAsString := getPuzzle(completePuzzleAsString)
+	puzzleSolution := createCompletedPuzzle(puzzleSolutionAsString)
+
+	workingPuzzle := createWorkingPuzzle(puzzleSolution)
+
+	cluesAsString := getClues(completePuzzleAsString)
+	clues := createCluesSlice(cluesAsString)
+
+	crosswordPuzzle := CrosswordPuzzle{MetaData: metaData, PuzzleSolution: puzzleSolution, WorkingPuzzle: workingPuzzle, Clues: clues}
+	return crosswordPuzzle, nil
+}
+
 func SetTile(workingPuzzle [][]string, row int, col int, input string) ([][]string, error) {
 
 	nRows := len(workingPuzzle)

@@ -23,5 +23,6 @@ func NewRouter() *chi.Mux {
 	r.Get("/api/ping", PingHandler)
 	r.Post("/api/uploadpuzzle", UploadPuzzleHandler)
 	r.Get("/api/metadata", getPuzzlesMetaDataHandler)
+	r.Get("/api/puzzle/{puzzleId}", getPuzzleByIDHandler)
 	return r
 }

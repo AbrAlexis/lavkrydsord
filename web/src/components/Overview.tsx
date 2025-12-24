@@ -40,6 +40,7 @@ function Overview() {
 
   function handleRowClick(puzzleId: number) {
     console.log("Row clicked for puzzle ID:", puzzleId);
+    navigate(`/puzzle/${puzzleId}`);
   }
 
   return (

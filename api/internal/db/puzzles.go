@@ -103,3 +103,13 @@ func getGenericMetaData(completePuzzleAsString string, metaDataType string) (str
 		return "", fmt.Errorf("metaData found but was empty")
 	}
 }
+
+func GetPuzzleByID(puzzleID int) (string, error) {
+	var puzzleData string
+	err := DB().QueryRow("SELECT xdPuzzle FROM puzzles WHERE id = ?", puzzleID).Scan(&puzzleData)
+	if err != nil {
+		log.Printf("ERROR getting puzzle by ID: %v", err)
+		return "", fmt.Errorf("error reading puzzle by ID: %w", err)
+	}
+	return puzzleData, nil
+}

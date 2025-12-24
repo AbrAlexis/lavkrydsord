@@ -9,6 +9,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
@@ -106,4 +109,27 @@ func HandleFrontpage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(marshalled)
+}
+
+func getPuzzleByIDHandler(w http.ResponseWriter, r *http.Request) {
+	puzzleIDStr := chi.URLParam(r, "puzzleId")
+	puzzleID, err := strconv.Atoi(puzzleIDStr)
+	if err != nil {
+		http.Error(w, "Invalid puzzle ID", http.StatusBadRequest)
+		return
+	}
+
+	puzzleData, err := db.GetPuzzleByID(puzzleID)
+	if err != nil {
+		http.Error(w, "Puzzle not found", http.StatusNotFound)
+		return
+	}
+
+	puzzleStruct, err := crosswordPuzzle.CreateCrosswordStructFromString(puzzleData)
+	if err != nil {
+		http.Error(w, "Failed to parse puzzle data", http.StatusInternalServerError)
+		return
+	}
+
+	MarshallPuzzleStruct(w, r, puzzleStruct)
 }
