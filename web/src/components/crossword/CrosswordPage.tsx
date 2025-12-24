@@ -1,6 +1,6 @@
 import Crossword from "./components/Crossword";
 import Clues from "./components/Clues";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 function CrosswordPage() {
   const { puzzleId } = useParams<{ puzzleId: string }>();

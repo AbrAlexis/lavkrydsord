@@ -107,7 +107,7 @@ func createCluesSlice(cluesAsString string) []Clue {
 	for i := range lines {
 		clue := clueRegex.FindStringSubmatch(lines[i])
 		number, _ := strconv.Atoi(clue[2])
-		listOfClues[i] = Clue{Orientation: clue[1], Number: number, Clue: clue[3], Answer: clue[4]}
+		listOfClues[i] = Clue{Orientation: clue[1], Number: number, Clue: clue[3]}
 	}
 	return listOfClues
 }
@@ -137,34 +137,11 @@ type Clue struct {
 	Orientation string
 	Number      int
 	Clue        string
-	Answer      string
 }
 type CrosswordPuzzle struct {
-	MetaData       []string
-	PuzzleSolution [][]string
-	WorkingPuzzle  [][]string
-	Clues          []Clue
-}
-
-func CreateCrosswordStructFromFile(filepath string) (CrosswordPuzzle, error) {
-	completePuzzleAsString, err := getCompletePuzzle(filepath)
-	if err != nil {
-		return CrosswordPuzzle{}, err
-	}
-
-	metaDataAsString := getMetaData(completePuzzleAsString)
-	metaData := createMetaDataList(metaDataAsString)
-
-	puzzleSolutionAsString := getPuzzle(completePuzzleAsString)
-	puzzleSolution := createCompletedPuzzle(puzzleSolutionAsString)
-
-	workingPuzzle := createWorkingPuzzle(puzzleSolution)
-
-	cluesAsString := getClues(completePuzzleAsString)
-	clues := createCluesSlice(cluesAsString)
-
-	crosswordPuzzle := CrosswordPuzzle{MetaData: metaData, PuzzleSolution: puzzleSolution, WorkingPuzzle: workingPuzzle, Clues: clues}
-	return crosswordPuzzle, nil
+	MetaData      []string
+	WorkingPuzzle [][]string
+	Clues         []Clue
 }
 
 func CreateCrosswordStructFromString(completePuzzleAsString string) (CrosswordPuzzle, error) {
@@ -179,30 +156,8 @@ func CreateCrosswordStructFromString(completePuzzleAsString string) (CrosswordPu
 	cluesAsString := getClues(completePuzzleAsString)
 	clues := createCluesSlice(cluesAsString)
 
-	crosswordPuzzle := CrosswordPuzzle{MetaData: metaData, PuzzleSolution: puzzleSolution, WorkingPuzzle: workingPuzzle, Clues: clues}
+	crosswordPuzzle := CrosswordPuzzle{MetaData: metaData, WorkingPuzzle: workingPuzzle, Clues: clues}
 	return crosswordPuzzle, nil
-}
-
-func SetTile(workingPuzzle [][]string, row int, col int, input string) ([][]string, error) {
-
-	nRows := len(workingPuzzle)
-
-	nCols := len(workingPuzzle[0])
-
-	if row < 0 || row >= nRows {
-		return workingPuzzle, fmt.Errorf("row invalid")
-	}
-
-	if col < 0 || col >= nCols {
-		return workingPuzzle, fmt.Errorf("column invalid")
-	}
-
-	if workingPuzzle[row][col] == "#" {
-		return workingPuzzle, fmt.Errorf("cant place tile on black square")
-	}
-
-	workingPuzzle[row][col] = input
-	return workingPuzzle, nil
 }
 
 type Coord struct {
@@ -223,37 +178,4 @@ func CheckPuzzle(workingPuzzle, puzzleSolution [][]string) []Coord {
 		}
 	}
 	return mistakes
-}
-
-func InitializeGame(filePath string) (completePuzzleStruct CrosswordPuzzle) {
-
-	completePuzzleStructReturn, err := CreateCrosswordStructFromFile(filePath)
-
-	if err != nil {
-		fmt.Println("faile initializing game")
-	}
-	return completePuzzleStructReturn
-}
-
-// func Test(filepath string) {
-// 	completePuzzleString, _ := getCompletePuzzle(filepath)
-// 	cluesString := getClues(completePuzzleString)
-// 	cluesSlice := createCluesSlice(cluesString)
-// 	fmt.Println(cluesSlice)
-// 	// fmt.Println(cluesString)
-// }
-
-func Test2(filepath string) {
-
-	puzzleStruct := InitializeGame(filepath)
-
-	puzzleSolution := puzzleStruct.PuzzleSolution
-	workingPuzzle := puzzleStruct.WorkingPuzzle
-
-	fmt.Println("is puzzle solved?")
-	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleSolution))
-	SetTile(workingPuzzle, 0, 0, "A")
-	fmt.Println("is puzzle solved now?")
-	fmt.Println(IsPuzzleSolved(workingPuzzle, puzzleSolution))
-
 }

@@ -1,7 +1,7 @@
 import "./App.css";
 import Overview from "./Overview";
 import UploadPuzzle from "./UploadPuzzle";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
 import CrosswordPage from "./crossword/CrosswordPage";
 

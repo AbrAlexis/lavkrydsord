@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 function UploadPuzzle() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const navigate = useNavigate();
   type pingResponse = string;
 
   async function ping() {

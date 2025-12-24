@@ -63,22 +63,22 @@ func MarshallPuzzleStruct(w http.ResponseWriter, r *http.Request, crosswordPuzzl
 	w.Write(marshalled)
 }
 
-func HandleCheckPuzzle(w http.ResponseWriter, r *http.Request) {
-	var req [][]string
-	json.NewDecoder(r.Body).Decode(&req)
-	w.Header().Set("Content-Type", "application/json")
-	puzzleStruct, err := crosswordPuzzle.CreateCrosswordStructFromFile("/home/abralexis/lavkrydsord/test.xd")
-	if err != nil {
-		fmt.Errorf("Fail in json helper")
-	}
-	solutionGrid := puzzleStruct.PuzzleSolution
-	puzzleErrors := crosswordPuzzle.CheckPuzzle(req, solutionGrid)
-	marshalled, err := json.Marshal(puzzleErrors)
-	if err != nil {
-		fmt.Errorf("marshalling failed")
-	}
-	w.Write(marshalled)
-}
+// func HandleCheckPuzzle(w http.ResponseWriter, r *http.Request) {
+// 	var req [][]string
+// 	json.NewDecoder(r.Body).Decode(&req)
+// 	w.Header().Set("Content-Type", "application/json")
+// 	puzzleStruct, err := crosswordPuzzle.CreateCrosswordStructFromFile("/home/abralexis/lavkrydsord/test.xd")
+// 	if err != nil {
+// 		fmt.Errorf("Fail in json helper")
+// 	}
+// 	solutionGrid := puzzleStruct.PuzzleSolution
+// 	puzzleErrors := crosswordPuzzle.CheckPuzzle(req, solutionGrid)
+// 	marshalled, err := json.Marshal(puzzleErrors)
+// 	if err != nil {
+// 		fmt.Errorf("marshalling failed")
+// 	}
+// 	w.Write(marshalled)
+// }
 
 func HandleFrontpage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
