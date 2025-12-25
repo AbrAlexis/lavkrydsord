@@ -1,5 +1,5 @@
 import type { CellProps } from "../types.ts";
-
+import "./Cell.css";
 function Cell({ value, isBlocked, isSelected, onClick }: CellProps) {
   return (
     <div
@@ -12,5 +12,6 @@ function Cell({ value, isBlocked, isSelected, onClick }: CellProps) {
     </div>
   );
 }
+
 
 export default Cell;

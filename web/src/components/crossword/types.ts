@@ -4,4 +4,14 @@ export type CellProps = {
   isSelected: boolean;
   onClick: () => void;
 };
-   
+export type Clue = {
+  Orientation: "A" | "D";
+  Number: number;
+  Clue: string;
+};
+
+export type PuzzleData = {
+  MetaData: string[];
+  WorkingPuzzle: string[][];
+  Clues: Clue[];
+};
