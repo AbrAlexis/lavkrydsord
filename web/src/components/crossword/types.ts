@@ -2,6 +2,7 @@ export type CellProps = {
   value: string;
   isBlocked: boolean;
   isSelected: boolean;
+  number?: number | null;
   onClick: () => void;
 };
 export type Clue = {

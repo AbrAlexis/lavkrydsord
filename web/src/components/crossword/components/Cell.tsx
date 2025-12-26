@@ -1,6 +1,6 @@
 import type { CellProps } from "../types.ts";
 import "./Cell.css";
-function Cell({ value, isBlocked, isSelected, onClick }: CellProps) {
+function Cell({ value, isBlocked, isSelected, number, onClick }: CellProps) {
   return (
     <div
       className={`cell ${isBlocked ? "blocked" : ""} ${
@@ -9,9 +9,9 @@ function Cell({ value, isBlocked, isSelected, onClick }: CellProps) {
       onClick={onClick}
     >
       {value}
+      {number !== null && <div className="cell-number">{number}</div>}
     </div>
   );
 }
-
 
 export default Cell;

@@ -1,8 +1,9 @@
 import Crossword from "./components/Crossword";
-import Clues from "./components/Clues";
+import Clues from "./components/clues/Clues.tsx";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { PuzzleData, Clue } from "../types.ts";
+import type { PuzzleData } from "./types.ts";
+import type { Clue } from "./types.ts";
 function CrosswordPage() {
   const { puzzleId } = useParams<{ puzzleId: string }>();
   const id = Number(puzzleId);
@@ -26,7 +27,6 @@ function CrosswordPage() {
     }
     fetchPuzzleData(id)
       .then((data) => {
-        console.log("Fetched puzzle data:", data.WorkingPuzzle);
         setWorkingPuzzle(data.WorkingPuzzle);
         setClues(data.Clues);
       })
