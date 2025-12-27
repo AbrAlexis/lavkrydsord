@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { PuzzleData } from "./types.ts";
 import type { Clue } from "./types.ts";
+import "./CrosswordPage.css";
 function CrosswordPage() {
   const { puzzleId } = useParams<{ puzzleId: string }>();
   const id = Number(puzzleId);
@@ -36,7 +37,7 @@ function CrosswordPage() {
   }, [id]);
 
   return (
-    <div>
+    <div className="crossword-page">
       <Crossword workingPuzzle={workingPuzzle} />
       <Clues clues={clues} />
     </div>

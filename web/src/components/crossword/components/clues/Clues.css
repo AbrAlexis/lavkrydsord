@@ -1,0 +1,10 @@
+.clues-section{
+  width: 300px;          
+  height: 50vh;         
+  overflow-y: auto;      
+  overflow-x: hidden;    
+  border: 1px solid #ccc;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #fafafa;
+}
