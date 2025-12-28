@@ -1,7 +1,7 @@
 import Cell from "./Cell.tsx";
 import "./Crossword.css";
 import { isBlockedCellChar } from "../../../constants/BlockedCellChars.ts";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 function getCellNumbers(puzzle: string[][]) {
   if (!puzzle.length) return [];
@@ -32,6 +32,11 @@ function Crossword({
   workingPuzzle: string[][];
   cellSize: number;
 }) {
+  const [selectedCell, setSelectedCell] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
+
   const cols = workingPuzzle[0]?.length ?? 0;
 
   const numbers = useMemo(() => getCellNumbers(workingPuzzle), [workingPuzzle]);
@@ -44,15 +49,18 @@ function Crossword({
       {workingPuzzle.flat().map((cellValue, index) => {
         const row = Math.floor(index / cols);
         const col = index % cols;
-
+        const isSelected =
+          selectedCell?.row === row && selectedCell?.col === col;
         return (
           <Cell
             key={index}
             value={isBlockedCellChar(cellValue) ? "" : cellValue}
             isBlocked={isBlockedCellChar(cellValue)}
-            isSelected={false}
+            isSelected={isSelected}
             number={numbers[row]?.[col] ?? null}
-            onClick={() => {}}
+            onClick={() => {
+              setSelectedCell({ row, col });
+            }}
           />
         );
       })}

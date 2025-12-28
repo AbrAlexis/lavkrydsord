@@ -19,3 +19,7 @@
   font-size: 0.45em; 
   color: black;
 }
+
+.cell.selected {
+  background-color: yellow; 
+}

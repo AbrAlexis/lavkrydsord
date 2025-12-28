@@ -1,5 +1,6 @@
 import type { Clue } from "../../types.ts";
 import "./Clues.css";
+import "./Clue.css";
 function Clues({ clues }: { clues: Clue[] }) {
   const acrossClues = clues.filter((clue) => clue.Orientation === "A");
   const downClues = clues.filter((clue) => clue.Orientation === "D");

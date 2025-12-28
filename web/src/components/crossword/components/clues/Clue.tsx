@@ -1,3 +1,4 @@
+import "./Clue.css";
 function Clue({ number, text }: { number: number; text: string }) {
   return (
     <div className="clue">

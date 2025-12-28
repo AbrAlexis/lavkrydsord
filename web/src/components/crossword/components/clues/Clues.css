@@ -6,6 +6,7 @@
   min-width: 200px;
   max-height: var(--grid-height); 
   flex-shrink: 0;
+  
 }
 
 .clues-section {
@@ -14,5 +15,6 @@
   overflow-y: auto;
   border: 1px solid #ccc;
   background: #fafafa;
+
 }
 

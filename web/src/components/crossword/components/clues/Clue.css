@@ -1,0 +1,6 @@
+.clue {
+  display: flex;          
+  align-items: center; 
+  font-size: larger;
+  padding: 0.25rem 0.5rem;   
+}
