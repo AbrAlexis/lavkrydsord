@@ -1,55 +1,61 @@
 import Cell from "./Cell.tsx";
 import "./Crossword.css";
-import "../../../constants/BlockedCellChars.ts";
 import { isBlockedCellChar } from "../../../constants/BlockedCellChars.ts";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
-function Crossword({ workingPuzzle }: { workingPuzzle: string[][] }) {
-  const [numbers, setNumbers] = useState<(number | null)[][]>([]);
-  useEffect(() => {
-    setNumbers(cellNumbers(workingPuzzle));
-  }, [workingPuzzle]);
+function getCellNumbers(puzzle: string[][]) {
+  if (!puzzle.length) return [];
+  const ans: (number | null)[][] = puzzle.map((row) => row.map(() => null));
+  let counter = 1;
 
-  function cellNumbers(puzzle: string[][]) {
-    const ans: (number | null)[][] = puzzle.map((row) => row.map(() => null));
-    let counter: number = 1;
+  for (let row = 0; row < puzzle.length; row++) {
+    for (let col = 0; col < puzzle[row].length; col++) {
+      if (isBlockedCellChar(puzzle[row][col])) continue;
 
-    for (let row = 0; row < puzzle.length; row++) {
-      for (let col = 0; col < puzzle[row].length; col++) {
-        const cell = puzzle[row][col];
-        if (isBlockedCellChar(cell)) {
-          continue;
-        }
-        if (
-          row === 0 ||
-          col === 0 ||
-          isBlockedCellChar(puzzle[row - 1][col]) ||
-          isBlockedCellChar(puzzle[row][col - 1])
-        ) {
-          ans[row][col] = counter;
-          counter++;
-        }
+      if (
+        row === 0 ||
+        col === 0 ||
+        isBlockedCellChar(puzzle[row - 1][col]) ||
+        isBlockedCellChar(puzzle[row][col - 1])
+      ) {
+        ans[row][col] = counter++;
       }
     }
-    return ans;
   }
+  return ans;
+}
+
+function Crossword({
+  workingPuzzle,
+  cellSize,
+}: {
+  workingPuzzle: string[][];
+  cellSize: number;
+}) {
+  const cols = workingPuzzle[0]?.length ?? 0;
+
+  const numbers = useMemo(() => getCellNumbers(workingPuzzle), [workingPuzzle]);
 
   return (
-    <div>
-      {workingPuzzle.map((row, rowIndex) => (
-        <div key={rowIndex} className="crossword-row">
-          {row.map((cellValue, cellIndex) => (
-            <Cell
-              key={cellIndex}
-              value={isBlockedCellChar(cellValue) ? "" : cellValue}
-              isBlocked={isBlockedCellChar(cellValue)}
-              isSelected={false}
-              number={numbers[rowIndex]?.[cellIndex] ?? null}
-              onClick={() => {}}
-            />
-          ))}
-        </div>
-      ))}
+    <div
+      className="crossword"
+      style={{ gridTemplateColumns: `repeat(${cols}, ${cellSize}px)` }}
+    >
+      {workingPuzzle.flat().map((cellValue, index) => {
+        const row = Math.floor(index / cols);
+        const col = index % cols;
+
+        return (
+          <Cell
+            key={index}
+            value={isBlockedCellChar(cellValue) ? "" : cellValue}
+            isBlocked={isBlockedCellChar(cellValue)}
+            isSelected={false}
+            number={numbers[row]?.[col] ?? null}
+            onClick={() => {}}
+          />
+        );
+      })}
     </div>
   );
 }

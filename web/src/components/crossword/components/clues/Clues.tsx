@@ -1,29 +1,11 @@
-import React, { useState, useEffect } from "react";
 import type { Clue } from "../../types.ts";
 import "./Clues.css";
 function Clues({ clues }: { clues: Clue[] }) {
-  const [acrossClues, setAcrossClues] = useState<Clue[]>([]);
-  const [downClues, setDownClues] = useState<Clue[]>([]);
+  const acrossClues = clues.filter((clue) => clue.Orientation === "A");
+  const downClues = clues.filter((clue) => clue.Orientation === "D");
 
-  const setCluesByOrientation = () => {
-    const across: Clue[] = [];
-    const down: Clue[] = [];
-    clues.forEach((clue) => {
-      if (clue.Orientation === "A") {
-        across.push(clue);
-      } else if (clue.Orientation === "D") {
-        down.push(clue);
-      }
-    });
-    setAcrossClues(across);
-    setDownClues(down);
-  };
-
-  useEffect(() => {
-    setCluesByOrientation();
-  }, [clues]);
   return (
-    <div>
+    <div className="clues-container">
       <div className="clues-section">
         <h3>Across</h3>
         {acrossClues.map((clue) => (

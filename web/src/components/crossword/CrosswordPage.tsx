@@ -1,6 +1,6 @@
 import Crossword from "./components/Crossword";
 import Clues from "./components/clues/Clues.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import type { PuzzleData } from "./types.ts";
 import type { Clue } from "./types.ts";
@@ -11,6 +11,15 @@ function CrosswordPage() {
   const [workingPuzzle, setWorkingPuzzle] = useState<string[][]>([]);
   const [clues, setClues] = useState<Clue[]>([]);
 
+  const { cellSize, totalGridHeight } = useMemo(() => {
+    const cols = workingPuzzle[0]?.length ?? 0;
+    const rows = workingPuzzle.length;
+    const size = Math.floor(
+      (Math.min(window.innerWidth, window.innerHeight) * 0.9) /
+        Math.max(1, cols)
+    );
+    return { cellSize: size, totalGridHeight: rows * size };
+  }, [workingPuzzle]);
   async function fetchPuzzleData(puzzleId: number): Promise<PuzzleData> {
     const response = await fetch(`/api/puzzle/${puzzleId}`, {
       method: "GET",
@@ -37,8 +46,11 @@ function CrosswordPage() {
   }, [id]);
 
   return (
-    <div className="crossword-page">
-      <Crossword workingPuzzle={workingPuzzle} />
+    <div
+      className="crossword-page"
+      style={{ "--grid-height": `${totalGridHeight}px` } as React.CSSProperties}
+    >
+      <Crossword workingPuzzle={workingPuzzle} cellSize={cellSize} />
       <Clues clues={clues} />
     </div>
   );

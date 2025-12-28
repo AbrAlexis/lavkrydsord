@@ -1,3 +1,7 @@
-.crossword-row {
-  display: flex;
+.crossword {
+  display: grid;
+  width: auto;
+  height: var(--grid-height); 
+  border: 2px solid black;
+  box-sizing: content-box; 
 }
