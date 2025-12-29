@@ -1,20 +1,21 @@
-import type { Clue } from "../../types.ts";
+import type { CluesProps, Direction } from "../../types.ts";
 import ClueComponent from "./Clue.tsx";
 import "./Clues.css";
 import "./Clue.css";
-
-interface CluesProps {
-  clues: Clue[];
-  activeClue: { direction: "across" | "down"; number: number } | null;
-  otherDirectionClueNumber: number | null;
-}
 
 const SECTIONS = [
   { label: "Across", orientation: "A", direction: "across" },
   { label: "Down", orientation: "D", direction: "down" },
 ] as const;
 
-function Clues({ clues, activeClue, otherDirectionClueNumber }: CluesProps) {
+function Clues({
+  clues,
+  onClick,
+  crosswordState,
+  updateCrosswordState,
+}: CluesProps) {
+  const { activeClue, otherDirectionClueNumber } = crosswordState;
+
   return (
     <div className="clues-container">
       {SECTIONS.map(({ label, orientation, direction }) => (
@@ -35,10 +36,12 @@ function Clues({ clues, activeClue, otherDirectionClueNumber }: CluesProps) {
               return (
                 <ClueComponent
                   key={clue.Number}
+                  direction={direction}
                   number={clue.Number}
                   text={clue.Clue}
                   isHighlighted={isHighlighted}
                   isOtherDirectionHighlighted={isOtherDirectionHighlighted}
+                  onClick={() => onClick(clue.Number, direction)}
                 />
               );
             })}

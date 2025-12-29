@@ -12,14 +12,26 @@ export type CellProps = {
 export type CrosswordProps = {
   workingPuzzle: string[][];
   cellSize: number;
-  activeClue: {
-    direction: "across" | "down";
-    number: number;
-  } | null;
-  setActiveClue: (
-    clue: { direction: "across" | "down"; number: number } | null
-  ) => void;
-  setOtherDirectionClueNumber: (num: number | null) => void;
+  clueNumberGrid: (number | null)[][];
+  cellClueMaps: cellClueMapping[][];
+  crosswordState: CrosswordState;
+  updateCrosswordState: (updates: Partial<CrosswordState>) => void;
+};
+
+export type CluesProps = {
+  clues: Clue[];
+  onClick: (key: number, clueDirection: Direction) => void;
+  crosswordState: CrosswordState;
+  updateCrosswordState: (updates: Partial<CrosswordState>) => void;
+};
+
+export type ClueComponentProps = {
+  number: number;
+  direction: string;
+  text: string;
+  isHighlighted: boolean;
+  isOtherDirectionHighlighted: boolean;
+  onClick?: () => void;
 };
 export type Clue = {
   Orientation: "A" | "D";
@@ -39,3 +51,10 @@ export type cellClueMapping = {
 };
 
 export type Direction = "across" | "down";
+
+export type CrosswordState = {
+  selectedCell: { row: number; col: number } | null;
+  activeClue: { number: number; direction: "across" | "down" } | null;
+  otherDirectionClueNumber: number | null;
+  direction: "across" | "down";
+};
