@@ -1,7 +1,21 @@
 import "./Clue.css";
-function Clue({ number, text }: { number: number; text: string }) {
+function Clue({
+  number,
+  text,
+  isHighlighted,
+  isOtherDirectionHighlighted,
+}: {
+  number: number;
+  text: string;
+  isHighlighted: boolean;
+  isOtherDirectionHighlighted: boolean;
+}) {
   return (
-    <div className="clue">
+    <div
+      className={`clue
+    ${isHighlighted ? "highlighted" : ""}
+    ${isOtherDirectionHighlighted ? "other-direction-highlighted" : ""}`}
+    >
       <span className="clue-number">{number}.</span> {text}
     </div>
   );

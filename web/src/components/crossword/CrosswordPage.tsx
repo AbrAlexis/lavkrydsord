@@ -2,14 +2,21 @@ import Crossword from "./components/Crossword";
 import Clues from "./components/clues/Clues.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import type { PuzzleData } from "./types.ts";
-import type { Clue } from "./types.ts";
+import type { PuzzleData, Clue } from "./types.ts";
+
 import "./CrosswordPage.css";
 function CrosswordPage() {
   const { puzzleId } = useParams<{ puzzleId: string }>();
   const id = Number(puzzleId);
   const [workingPuzzle, setWorkingPuzzle] = useState<string[][]>([]);
   const [clues, setClues] = useState<Clue[]>([]);
+  const [activeClue, setActiveClue] = useState<{
+    direction: "across" | "down";
+    number: number;
+  } | null>(null);
+  const [otherDirectionClueNumber, setOtherDirectionClueNumber] = useState<
+    number | null
+  >(null);
 
   const { cellSize, totalGridHeight } = useMemo(() => {
     const cols = workingPuzzle[0]?.length ?? 0;
@@ -50,8 +57,18 @@ function CrosswordPage() {
       className="crossword-page"
       style={{ "--grid-height": `${totalGridHeight}px` } as React.CSSProperties}
     >
-      <Crossword workingPuzzle={workingPuzzle} cellSize={cellSize} />
-      <Clues clues={clues} />
+      <Crossword
+        workingPuzzle={workingPuzzle}
+        cellSize={cellSize}
+        activeClue={activeClue}
+        setActiveClue={setActiveClue}
+        setOtherDirectionClueNumber={setOtherDirectionClueNumber}
+      />
+      <Clues
+        clues={clues}
+        activeClue={activeClue}
+        otherDirectionClueNumber={otherDirectionClueNumber}
+      />
     </div>
   );
 }

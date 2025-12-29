@@ -8,6 +8,19 @@ export type CellProps = {
   downClueNumber: number | null;
   onClick: () => void;
 };
+
+export type CrosswordProps = {
+  workingPuzzle: string[][];
+  cellSize: number;
+  activeClue: {
+    direction: "across" | "down";
+    number: number;
+  } | null;
+  setActiveClue: (
+    clue: { direction: "across" | "down"; number: number } | null
+  ) => void;
+  setOtherDirectionClueNumber: (num: number | null) => void;
+};
 export type Clue = {
   Orientation: "A" | "D";
   Number: number;

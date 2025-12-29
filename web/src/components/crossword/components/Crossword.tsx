@@ -2,7 +2,7 @@ import Cell from "./Cell.tsx";
 import "./Crossword.css";
 import { isBlockedCellChar } from "../../../constants/BlockedCellChars.ts";
 import { useMemo, useState } from "react";
-import type { cellClueMapping, Direction } from "../types.ts";
+import type { cellClueMapping, Direction, CrosswordProps } from "../types.ts";
 import { flipDirection } from "../../../services/puzzleServices.ts";
 
 function getCellNumbers(puzzle: string[][]) {
@@ -71,18 +71,13 @@ function getBelongingClueNumbers(
 function Crossword({
   workingPuzzle,
   cellSize,
-}: {
-  workingPuzzle: string[][];
-  cellSize: number;
-}) {
+  activeClue,
+  setActiveClue,
+  setOtherDirectionClueNumber,
+}: CrosswordProps) {
   const [selectedCell, setSelectedCell] = useState<{
     row: number;
     col: number;
-  } | null>(null);
-
-  const [activeClue, setActiveClue] = useState<{
-    direction: "across" | "down";
-    number: number;
   } | null>(null);
 
   const [direction, setDirection] = useState<Direction>("across");
@@ -108,20 +103,22 @@ function Crossword({
 
     setSelectedCell({ row, col });
 
-    if (nextDirection === "across") {
-      if (clueMap.acrossClueNumber !== null) {
-        setActiveClue({
-          direction: nextDirection,
-          number: clueMap.acrossClueNumber,
-        });
-      }
-    } else if (nextDirection === "down") {
-      if (clueMap.downClueNumber !== null) {
-        setActiveClue({
-          direction: nextDirection,
-          number: clueMap.downClueNumber,
-        });
-      }
+    const currentClueNumber =
+      nextDirection === "across"
+        ? clueMap.acrossClueNumber
+        : clueMap.downClueNumber;
+
+    const otherClueNumber =
+      nextDirection === "across"
+        ? clueMap.downClueNumber
+        : clueMap.acrossClueNumber;
+
+    if (currentClueNumber !== null) {
+      setActiveClue({
+        direction: nextDirection,
+        number: currentClueNumber,
+      });
+      setOtherDirectionClueNumber(otherClueNumber);
     }
   }
 

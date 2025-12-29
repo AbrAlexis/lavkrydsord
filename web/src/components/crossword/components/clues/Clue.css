@@ -4,3 +4,11 @@
   font-size: larger;
   padding: 0.25rem 0.5rem;   
 }
+
+.clue.highlighted {
+  background-color: lightblue; 
+}
+
+.clue.other-direction-highlighted {
+  background: grey;
+}
