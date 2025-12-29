@@ -2,7 +2,10 @@ export type CellProps = {
   value: string;
   isBlocked: boolean;
   isSelected: boolean;
+  isHighlighted?: boolean;
   number?: number | null;
+  acrossClueNumber: number | null;
+  downClueNumber: number | null;
   onClick: () => void;
 };
 export type Clue = {
@@ -16,3 +19,10 @@ export type PuzzleData = {
   WorkingPuzzle: string[][];
   Clues: Clue[];
 };
+
+export type cellClueMapping = {
+  acrossClueNumber: number | null;
+  downClueNumber: number | null;
+};
+
+export type Direction = "across" | "down";

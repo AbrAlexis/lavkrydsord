@@ -1,11 +1,19 @@
 import type { CellProps } from "../types.ts";
 import "./Cell.css";
-function Cell({ value, isBlocked, isSelected, number, onClick }: CellProps) {
+function Cell({
+  value,
+  isBlocked,
+  isSelected,
+  isHighlighted,
+  number,
+  onClick,
+}: CellProps) {
   return (
     <div
-      className={`cell ${isBlocked ? "blocked" : ""} ${
-        isSelected ? "selected" : ""
-      }`}
+      className={`cell 
+        ${isBlocked ? "blocked" : ""}
+        ${isSelected ? "selected" : ""}
+        ${isHighlighted ? "highlighted" : ""}`}
       onClick={onClick}
     >
       {value}
