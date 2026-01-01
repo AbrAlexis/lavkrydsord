@@ -23,6 +23,7 @@ import {
   handleArrowKey,
   getActiveClue,
   flipDirection,
+  getNextCellArrowKey,
 } from "../../services/puzzleServices.ts";
 
 function CrosswordPage() {
@@ -141,7 +142,7 @@ function CrosswordPage() {
     if (crosswordState.selectedCell === null) return;
     const { row, col } = crosswordState.selectedCell;
     const newGridValues = [...gridValues];
-    newGridValues[row][col] = letter;
+    newGridValues[row][col] = letter.toUpperCase();
     setGridValues(newGridValues);
     moveCell("next");
   }
@@ -185,7 +186,8 @@ function CrosswordPage() {
         });
       }
       if (isArrowKey(e.key)) {
-        const newSelectedCell = handleArrowKey(
+        e.preventDefault();
+        const newSelectedCell = getNextCellArrowKey(
           e.key,
           writeLocation,
           workingPuzzle

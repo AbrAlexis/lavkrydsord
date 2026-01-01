@@ -158,6 +158,7 @@ export function handleArrowKey(
       } else {
         return { row: selectedCell.row - 1, col: selectedCell.col };
       }
+
     case "ArrowDown":
       if (
         selectedCell.row == workingPuzzle.length - 1 ||
@@ -190,19 +191,60 @@ export function handleArrowKey(
   }
 }
 
-export function foo(
+export function getNextCellArrowKey(
+  key: string,
   selectedCell: { row: number; col: number } | null,
-  cellClueMapping: cellClueMapping[][],
-  direction: Direction
+  workingPuzzle: string[][]
 ) {
-  if (!selectedCell) return { acrossClueNumber: null, downClueNumber: null };
-  return {
-    number:
-      direction === "across"
-        ? cellClueMapping[selectedCell.row][selectedCell.col].acrossClueNumber
-        : cellClueMapping[selectedCell.row][selectedCell.col].downClueNumber,
-    direction: direction,
-  };
+  if (!selectedCell) return null;
+
+  const rows = workingPuzzle.length;
+  const cols = workingPuzzle[0].length;
+  const col = selectedCell.col;
+
+  switch (key) {
+    case "ArrowUp":
+      for (let i = 1; i <= rows; i++) {
+        const newRow = (selectedCell.row - i + rows) % rows;
+
+        if (!isBlockedCellChar(workingPuzzle[newRow][col])) {
+          return { row: newRow, col };
+        }
+      }
+      break;
+
+    case "ArrowDown":
+      for (let i = 1; i <= rows; i++) {
+        const newRow = (selectedCell.row + i) % rows;
+
+        if (!isBlockedCellChar(workingPuzzle[newRow][col])) {
+          return { row: newRow, col };
+        }
+      }
+      break;
+    case "ArrowLeft":
+      for (let i = 1; i <= cols; i++) {
+        const newCol = (selectedCell.col - i + cols) % cols;
+
+        if (!isBlockedCellChar(workingPuzzle[selectedCell.row][newCol])) {
+          return { row: selectedCell.row, col: newCol };
+        }
+      }
+      break;
+    case "ArrowRight":
+      for (let i = 1; i <= cols; i++) {
+        const newCol = (selectedCell.col + i) % cols;
+
+        if (!isBlockedCellChar(workingPuzzle[selectedCell.row][newCol])) {
+          return { row: selectedCell.row, col: newCol };
+        }
+      }
+      break;
+    default:
+      return selectedCell;
+  }
+
+  return selectedCell;
 }
 
 export function getActiveClue(

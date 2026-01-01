@@ -19,7 +19,7 @@ function Crossword({
     const clueMap = cellClueMaps[row][col];
     const selectedCell = crosswordState.selectedCell;
     if (!clueMap) return;
-
+    if (isBlockedCellChar(workingPuzzle[row][col])) return;
     const isSameCell = selectedCell?.row === row && selectedCell?.col === col;
     const nextDirection = isSameCell
       ? flipDirection(crosswordState.direction)
@@ -49,6 +49,7 @@ function Crossword({
       });
     }
   }
+  console.log("Grid render");
 
   return (
     <div

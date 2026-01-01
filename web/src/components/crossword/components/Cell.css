@@ -11,6 +11,7 @@
 }
 .cell.blocked {
   background-color: black;
+  cursor: default;
 }
 .cell-number {
   position: absolute;
