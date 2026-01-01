@@ -1,5 +1,9 @@
 const blockedCellChars = ["#", ".", "*"];
-function isBlockedCellChar(char: string): boolean {
+export function isBlockedCellChar(char: string): boolean {
   return blockedCellChars.includes(char);
 }
-export { isBlockedCellChar };
+
+const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+export function isArrowKey(key: string): boolean {
+  return arrowKeys.includes(key);
+}

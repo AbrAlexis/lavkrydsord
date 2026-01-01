@@ -1,5 +1,9 @@
 import { isBlockedCellChar } from "../constants/BlockedCellChars.ts";
-import type { cellClueMapping } from "../components/crossword/types.ts";
+import type {
+  cellClueMapping,
+  Direction,
+  ActiveClue,
+} from "../components/crossword/types.ts";
 export function flipDirection(direction: "across" | "down"): "down" | "across" {
   return direction === "across" ? "down" : "across";
 }
@@ -79,4 +83,142 @@ export function createClueNumberToCellLocationMap(
     }
   }
   return res;
+}
+
+export function nextCell(
+  location: { row: number; col: number } | null,
+  workingPuzzle: string[][],
+  direction: Direction
+) {
+  if (!location) return null;
+  switch (direction) {
+    case "across":
+      if (
+        location.col == workingPuzzle[0].length - 1 ||
+        isBlockedCellChar(workingPuzzle[location.row][location.col + 1])
+      ) {
+        return null;
+      } else {
+        return { row: location.row, col: location.col + 1 };
+      }
+    case "down":
+      if (
+        location.row == workingPuzzle.length - 1 ||
+        isBlockedCellChar(workingPuzzle[location.row + 1][location.col])
+      ) {
+        return null;
+      } else {
+        return { row: location.row + 1, col: location.col };
+      }
+  }
+}
+
+export function previousCell(
+  location: { row: number; col: number } | null,
+  workingPuzzle: string[][],
+  direction: Direction
+) {
+  if (!location) return null;
+  switch (direction) {
+    case "across":
+      if (
+        location.col == 0 ||
+        isBlockedCellChar(workingPuzzle[location.row][location.col - 1])
+      ) {
+        return null;
+      } else {
+        return { row: location.row, col: location.col - 1 };
+      }
+    case "down":
+      if (
+        location.row == 0 ||
+        isBlockedCellChar(workingPuzzle[location.row - 1][location.col])
+      ) {
+        return null;
+      } else {
+        return { row: location.row - 1, col: location.col };
+      }
+  }
+}
+
+export function handleArrowKey(
+  key: string,
+  selectedCell: { row: number; col: number } | null,
+  workingPuzzle: string[][]
+): { row: number; col: number } | null {
+  if (!selectedCell) return null;
+
+  switch (key) {
+    case "ArrowUp":
+      if (
+        selectedCell.row == 0 ||
+        isBlockedCellChar(workingPuzzle[selectedCell.row - 1][selectedCell.col])
+      ) {
+        return selectedCell;
+      } else {
+        return { row: selectedCell.row - 1, col: selectedCell.col };
+      }
+    case "ArrowDown":
+      if (
+        selectedCell.row == workingPuzzle.length - 1 ||
+        isBlockedCellChar(workingPuzzle[selectedCell.row + 1][selectedCell.col])
+      ) {
+        return selectedCell;
+      } else {
+        return { row: selectedCell.row + 1, col: selectedCell.col };
+      }
+    case "ArrowLeft":
+      if (
+        selectedCell.col == 0 ||
+        isBlockedCellChar(workingPuzzle[selectedCell.row][selectedCell.col - 1])
+      ) {
+        return selectedCell;
+      } else {
+        return { row: selectedCell.row, col: selectedCell.col - 1 };
+      }
+    case "ArrowRight":
+      if (
+        selectedCell.col == workingPuzzle[0].length - 1 ||
+        isBlockedCellChar(workingPuzzle[selectedCell.row][selectedCell.col + 1])
+      ) {
+        return selectedCell;
+      } else {
+        return { row: selectedCell.row, col: selectedCell.col + 1 };
+      }
+    default:
+      return selectedCell;
+  }
+}
+
+export function foo(
+  selectedCell: { row: number; col: number } | null,
+  cellClueMapping: cellClueMapping[][],
+  direction: Direction
+) {
+  if (!selectedCell) return { acrossClueNumber: null, downClueNumber: null };
+  return {
+    number:
+      direction === "across"
+        ? cellClueMapping[selectedCell.row][selectedCell.col].acrossClueNumber
+        : cellClueMapping[selectedCell.row][selectedCell.col].downClueNumber,
+    direction: direction,
+  };
+}
+
+export function getActiveClue(
+  selectedCell: { row: number; col: number } | null,
+  cellClueMapping: cellClueMapping[][],
+  direction: Direction
+): ActiveClue {
+  if (!selectedCell) {
+    return { number: null, direction: null };
+  }
+
+  const cell = cellClueMapping[selectedCell.row][selectedCell.col];
+
+  return {
+    number:
+      direction === "across" ? cell.acrossClueNumber : cell.downClueNumber,
+    direction,
+  };
 }

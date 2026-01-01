@@ -14,6 +14,7 @@ export type CrosswordProps = {
   cellSize: number;
   clueNumberGrid: (number | null)[][];
   cellClueMaps: cellClueMapping[][];
+  gridValues: CellValue[][];
   crosswordState: CrosswordState;
   updateCrosswordState: (updates: Partial<CrosswordState>) => void;
 };
@@ -54,7 +55,14 @@ export type Direction = "across" | "down";
 
 export type CrosswordState = {
   selectedCell: { row: number; col: number } | null;
-  activeClue: { number: number; direction: "across" | "down" } | null;
+  activeClue: ActiveClue | null;
   otherDirectionClueNumber: number | null;
   direction: "across" | "down";
+};
+
+export type CellValue = string;
+
+export type ActiveClue = {
+  number: number | null;
+  direction: "across" | "down" | null;
 };

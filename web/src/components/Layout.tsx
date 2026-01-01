@@ -5,7 +5,7 @@ function Layout() {
   return (
     <>
       <div className="logo">
-        <h1 onClick={() => navigate("/")}>Lav Krydsord</h1>
+        <h1 onClick={() => navigate("/")}>Home</h1>
       </div>
       <Outlet />
     </>

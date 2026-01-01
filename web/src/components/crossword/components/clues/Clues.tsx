@@ -1,4 +1,4 @@
-import type { CluesProps, Direction } from "../../types.ts";
+import type { CluesProps } from "../../types.ts";
 import ClueComponent from "./Clue.tsx";
 import "./Clues.css";
 import "./Clue.css";
@@ -8,12 +8,7 @@ const SECTIONS = [
   { label: "Down", orientation: "D", direction: "down" },
 ] as const;
 
-function Clues({
-  clues,
-  onClick,
-  crosswordState,
-  updateCrosswordState,
-}: CluesProps) {
+function Clues({ clues, onClick, crosswordState }: CluesProps) {
   const { activeClue, otherDirectionClueNumber } = crosswordState;
 
   return (

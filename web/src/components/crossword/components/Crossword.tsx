@@ -1,7 +1,6 @@
 import Cell from "./Cell.tsx";
 import "./Crossword.css";
 import { isBlockedCellChar } from "../../../constants/BlockedCellChars.ts";
-import { useState } from "react";
 import type { CrosswordProps } from "../types.ts";
 import { flipDirection } from "../../../services/puzzleServices.ts";
 
@@ -10,6 +9,7 @@ function Crossword({
   cellSize,
   clueNumberGrid,
   cellClueMaps,
+  gridValues,
   crosswordState,
   updateCrosswordState,
 }: CrosswordProps) {
@@ -77,7 +77,7 @@ function Crossword({
         return (
           <Cell
             key={index}
-            value={isBlockedCellChar(cellValue) ? "" : cellValue}
+            value={isBlockedCellChar(cellValue) ? "" : gridValues[row]?.[col]}
             isBlocked={isBlockedCellChar(cellValue)}
             isSelected={isSelected}
             isHighlighted={isHighlighted}

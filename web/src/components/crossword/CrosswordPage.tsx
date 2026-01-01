@@ -2,12 +2,27 @@ import Crossword from "./components/Crossword";
 import Clues from "./components/clues/Clues.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import type { PuzzleData, Clue, CrosswordState, Direction } from "./types.ts";
+import {
+  isArrowKey,
+  isBlockedCellChar,
+} from "../../constants/BlockedCellChars.ts";
+import type {
+  PuzzleData,
+  Clue,
+  CrosswordState,
+  Direction,
+  CellValue,
+} from "./types.ts";
 import "./CrosswordPage.css";
 import {
   getCellNumbers,
   getBelongingClueNumbers,
   createClueNumberToCellLocationMap,
+  nextCell,
+  previousCell,
+  handleArrowKey,
+  getActiveClue,
+  flipDirection,
 } from "../../services/puzzleServices.ts";
 
 function CrosswordPage() {
@@ -15,6 +30,7 @@ function CrosswordPage() {
   const id = Number(puzzleId);
   const [workingPuzzle, setWorkingPuzzle] = useState<string[][]>([]);
   const [clues, setClues] = useState<Clue[]>([]);
+  const [gridValues, setGridValues] = useState<CellValue[][]>([]);
 
   const [crosswordState, setCrosswordState] = useState<CrosswordState>({
     selectedCell: null,
@@ -91,6 +107,109 @@ function CrosswordPage() {
       });
   }, [id]);
 
+  useEffect(() => {
+    if (workingPuzzle.length > 0) {
+      setGridValues(workingPuzzle);
+    }
+  }, [workingPuzzle]);
+
+  // should probably find a better parameter name
+  function moveCell(direction: string) {
+    if (crosswordState.selectedCell === null) return;
+    if (direction === "next") {
+      const next = nextCell(
+        crosswordState.selectedCell,
+        workingPuzzle,
+        crosswordState.direction
+      );
+      if (next) {
+        updateCrosswordState({ selectedCell: next });
+      }
+    } else if (direction === "previous") {
+      const previous = previousCell(
+        crosswordState.selectedCell,
+        workingPuzzle,
+        crosswordState.direction
+      );
+      if (previous) {
+        updateCrosswordState({ selectedCell: previous });
+      }
+    }
+  }
+
+  function writeLetter(letter: CellValue) {
+    if (crosswordState.selectedCell === null) return;
+    const { row, col } = crosswordState.selectedCell;
+    const newGridValues = [...gridValues];
+    newGridValues[row][col] = letter;
+    setGridValues(newGridValues);
+    moveCell("next");
+  }
+
+  function deleteLetter() {
+    if (crosswordState.selectedCell === null) return;
+    const { row, col } = crosswordState.selectedCell;
+    const newGridValues = [...gridValues];
+    newGridValues[row][col] = "";
+    setGridValues(newGridValues);
+    moveCell("previous");
+  }
+
+  useEffect(() => {
+    function handleKeyPressed(e: KeyboardEvent) {
+      if (crosswordState.selectedCell === null) {
+        return;
+      }
+
+      const writeLocation = crosswordState.selectedCell;
+
+      if (!writeLocation) return;
+
+      if (e.key === "Backspace") {
+        console.log("Backspace pressed");
+        deleteLetter();
+        return;
+      }
+      if (e.key == " ") {
+        e.preventDefault();
+        console.log("Space pressed");
+        const newDirection = flipDirection(crosswordState.direction);
+        const newActiveClue = getActiveClue(
+          writeLocation,
+          cellClueMaps,
+          newDirection
+        );
+        updateCrosswordState({
+          direction: newDirection,
+          activeClue: newActiveClue,
+        });
+      }
+      if (isArrowKey(e.key)) {
+        const newSelectedCell = handleArrowKey(
+          e.key,
+          writeLocation,
+          workingPuzzle
+        );
+        const newActiveClue = getActiveClue(
+          newSelectedCell,
+          cellClueMaps,
+          crosswordState.direction
+        );
+        updateCrosswordState({
+          selectedCell: newSelectedCell,
+          activeClue: newActiveClue,
+        });
+      }
+
+      // should add danish and other languages letters at some point
+      if (/^[A-Za-z]$/.test(e.key)) {
+        writeLetter(e.key);
+      }
+    }
+    window.addEventListener("keydown", handleKeyPressed);
+    return () => window.removeEventListener("keydown", handleKeyPressed);
+  }, [crosswordState.selectedCell, crosswordState.direction, gridValues]);
+
   return (
     <div
       className="crossword-page"
@@ -101,6 +220,7 @@ function CrosswordPage() {
         cellSize={cellSize}
         cellClueMaps={cellClueMaps}
         clueNumberGrid={clueNumberGrid}
+        gridValues={gridValues}
         crosswordState={crosswordState}
         updateCrosswordState={updateCrosswordState}
       />
