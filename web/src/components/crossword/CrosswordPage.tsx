@@ -9,6 +9,7 @@ import type {
   CrosswordState,
   Direction,
   CellValue,
+  CellClueMapping,
 } from "./types.ts";
 import "./CrosswordPage.css";
 import {
@@ -22,7 +23,6 @@ import {
   getNextCellArrowKey,
 } from "../../services/puzzleServices.ts";
 import { isBlockedCellChar } from "../../constants/BlockedCellChars.ts";
-import ActiveClueDisplayer from "./components/clues/ActiveClueDisplayer.tsx";
 
 function CrosswordPage() {
   const { puzzleId } = useParams<{ puzzleId: string }>();
@@ -64,14 +64,26 @@ function CrosswordPage() {
     return { cellSize: size, totalGridHeight: rows * size };
   }, [workingPuzzle]);
 
+  function getOtherDirectionClueNumber(
+    cellLocation: { row: number; col: number },
+    direction: Direction,
+    cellClueMaps: CellClueMapping[][]
+  ) {
+    const clueMap = cellClueMaps[cellLocation.row][cellLocation.col];
+    if (direction === "across") {
+      return clueMap.downClueNumber;
+    } else {
+      return clueMap.acrossClueNumber;
+    }
+  }
   function handleClueClick(number: number, direction: Direction) {
     const newSelectedCellLocation = clueNumberToCellLocationMap[number];
-    const clueMap =
-      cellClueMaps[newSelectedCellLocation.row][newSelectedCellLocation.col];
-    const otherDirectionClueNumber =
-      direction === "across"
-        ? clueMap.downClueNumber
-        : clueMap.acrossClueNumber;
+    const otherDirectionClueNumber = getOtherDirectionClueNumber(
+      newSelectedCellLocation,
+      direction,
+      cellClueMaps
+    );
+
     if (newSelectedCellLocation) {
       updateCrosswordState({
         selectedCell: newSelectedCellLocation,
@@ -121,18 +133,34 @@ function CrosswordPage() {
         workingPuzzle,
         crosswordState.direction
       );
-      if (next) {
-        updateCrosswordState({ selectedCell: next });
-      }
+      if (!next) return;
+      const nextOtherDirectionClueNumber = getOtherDirectionClueNumber(
+        next,
+        crosswordState.direction,
+        cellClueMaps
+      );
+      console.log("nextOtherDirectionClueNumber", nextOtherDirectionClueNumber);
+      updateCrosswordState({
+        selectedCell: next,
+        otherDirectionClueNumber: nextOtherDirectionClueNumber,
+      });
     } else if (direction === "previous") {
       const previous = previousCell(
         crosswordState.selectedCell,
         workingPuzzle,
         crosswordState.direction
       );
-      if (previous) {
-        updateCrosswordState({ selectedCell: previous });
-      }
+      if (!previous) return;
+      const nextOtherDirectionClueNumber = getOtherDirectionClueNumber(
+        previous,
+        crosswordState.direction,
+        cellClueMaps
+      );
+      console.log("nextOtherDirectionClueNumber", nextOtherDirectionClueNumber);
+      updateCrosswordState({
+        selectedCell: previous,
+        otherDirectionClueNumber: nextOtherDirectionClueNumber,
+      });
     }
   }
 
@@ -218,9 +246,18 @@ function CrosswordPage() {
           cellClueMaps,
           crosswordState.direction
         );
+
+        const newOtherDirectionClueNumber = newSelectedCell
+          ? getOtherDirectionClueNumber(
+              newSelectedCell,
+              crosswordState.direction,
+              cellClueMaps
+            )
+          : null;
         updateCrosswordState({
           selectedCell: newSelectedCell,
           activeClue: newActiveClue,
+          otherDirectionClueNumber: newOtherDirectionClueNumber,
         });
       }
 
@@ -253,7 +290,6 @@ function CrosswordPage() {
         crosswordState={crosswordState}
         updateCrosswordState={updateCrosswordState}
       />
-
     </div>
   );
 }
