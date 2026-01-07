@@ -2,10 +2,7 @@ import Crossword from "./components/Crossword";
 import Clues from "./components/clues/Clues.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import {
-  isArrowKey,
-  isBlockedCellChar,
-} from "../../constants/BlockedCellChars.ts";
+import { isArrowKey } from "../../constants/BlockedCellChars.ts";
 import type {
   PuzzleData,
   Clue,
@@ -20,11 +17,12 @@ import {
   createClueNumberToCellLocationMap,
   nextCell,
   previousCell,
-  handleArrowKey,
   getActiveClue,
   flipDirection,
   getNextCellArrowKey,
 } from "../../services/puzzleServices.ts";
+import { isBlockedCellChar } from "../../constants/BlockedCellChars.ts";
+import ActiveClueDisplayer from "./components/clues/ActiveClueDisplayer.tsx";
 
 function CrosswordPage() {
   const { puzzleId } = useParams<{ puzzleId: string }>();
@@ -151,9 +149,32 @@ function CrosswordPage() {
     if (crosswordState.selectedCell === null) return;
     const { row, col } = crosswordState.selectedCell;
     const newGridValues = [...gridValues];
-    newGridValues[row][col] = "";
+    switch (crosswordState.direction) {
+      case "across":
+        if (
+          !isBlockedCellChar(newGridValues[row][col]) &&
+          newGridValues[row][col] !== ""
+        ) {
+          newGridValues[row][col] = "";
+        } else if (col > 0 && !isBlockedCellChar(newGridValues[row][col - 1])) {
+          newGridValues[row][col - 1] = "";
+          moveCell("previous");
+        }
+        break;
+      case "down":
+        if (
+          !isBlockedCellChar(newGridValues[row][col]) &&
+          newGridValues[row][col] !== ""
+        ) {
+          newGridValues[row][col] = "";
+        } else if (row > 0 && !isBlockedCellChar(newGridValues[row - 1][col])) {
+          newGridValues[row - 1][col] = "";
+          moveCell("previous");
+        }
+        break;
+    }
+
     setGridValues(newGridValues);
-    moveCell("previous");
   }
 
   useEffect(() => {
@@ -232,6 +253,7 @@ function CrosswordPage() {
         crosswordState={crosswordState}
         updateCrosswordState={updateCrosswordState}
       />
+
     </div>
   );
 }

@@ -46,7 +46,7 @@ export type PuzzleData = {
   Clues: Clue[];
 };
 
-export type cellClueMapping = {
+export type CellClueMapping = {
   acrossClueNumber: number | null;
   downClueNumber: number | null;
 };
