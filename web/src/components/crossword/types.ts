@@ -13,7 +13,7 @@ export type CrosswordProps = {
   workingPuzzle: string[][];
   cellSize: number;
   clueNumberGrid: (number | null)[][];
-  cellClueMaps: cellClueMapping[][];
+  cellClueMaps: CellClueMapping[][];
   gridValues: CellValue[][];
   crosswordState: CrosswordState;
   updateCrosswordState: (updates: Partial<CrosswordState>) => void;
@@ -33,6 +33,7 @@ export type ClueComponentProps = {
   isHighlighted: boolean;
   isOtherDirectionHighlighted: boolean;
   onClick?: () => void;
+  ref: boolean;
 };
 export type Clue = {
   Orientation: "A" | "D";

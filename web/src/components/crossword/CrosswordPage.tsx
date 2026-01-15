@@ -229,9 +229,15 @@ function CrosswordPage() {
           cellClueMaps,
           newDirection
         );
+        const newOtherDirectionClueNumber = getOtherDirectionClueNumber(
+          writeLocation,
+          newDirection,
+          cellClueMaps
+        );
         updateCrosswordState({
           direction: newDirection,
           activeClue: newActiveClue,
+          otherDirectionClueNumber: newOtherDirectionClueNumber,
         });
       }
       if (isArrowKey(e.key)) {
