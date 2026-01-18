@@ -1,6 +1,20 @@
-.logo{
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 1rem 1.5rem;
+}
+
+.logo {
+  width: 200px;      
+  height: auto;
   cursor: pointer;
-  position: absolute;
-  top: calc(5vh);
-  left: calc(5vw);
+
+}
+
+.content {
+  flex: 1;
 }

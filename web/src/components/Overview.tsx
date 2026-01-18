@@ -44,9 +44,7 @@ function Overview() {
   }
 
   return (
-    <>
-      <button onClick={() => fetchMetadata()}>refresh</button>
-      <button onClick={() => navigate("/upload")}>upload</button>
+    <div className="overview">
       <div className="puzzle-table">
         <table>
           <thead>
@@ -73,7 +71,11 @@ function Overview() {
           </tbody>
         </table>
       </div>
-    </>
+      <div className="buttons">
+        <button onClick={() => fetchMetadata()}>refresh</button>
+        <button onClick={() => navigate("/upload")}>upload</button>
+      </div>
+    </div>
   );
 }
 export default Overview;
