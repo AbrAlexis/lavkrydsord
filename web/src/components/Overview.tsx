@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Overview.css";
-interface PuzzleMetaData {
-  id: number;
-  title: string;
-  author: string;
-  date: string;
-}
+import type { PuzzleMetaData } from "./crossword/types.ts";
 
 function Overview() {
   const [metaData, setMetaData] = useState<PuzzleMetaData[]>([]);
@@ -38,9 +33,20 @@ function Overview() {
     }
   }
 
-  function handleRowClick(puzzleId: number) {
-    console.log("Row clicked for puzzle ID:", puzzleId);
-    navigate(`/puzzle/${puzzleId}`);
+  function handleRowClick(
+    puzzleId: number,
+    puzzleTitle: string,
+    puzzleAuthor: string,
+    puzzleDate: string
+  ) {
+    navigate(`/puzzle/${puzzleId}`, {
+      state: {
+        puzzleId: puzzleId,
+        puzzleTitle: puzzleTitle,
+        puzzleAuthor: puzzleAuthor,
+        puzzleDate: puzzleDate,
+      },
+    });
   }
 
   return (
@@ -59,7 +65,14 @@ function Overview() {
             {metaData.map((puzzle) => (
               <tr
                 key={puzzle.id}
-                onClick={() => handleRowClick(puzzle.id)}
+                onClick={() =>
+                  handleRowClick(
+                    puzzle.id,
+                    puzzle.title,
+                    puzzle.author,
+                    puzzle.date
+                  )
+                }
                 className="clickable-row"
               >
                 <td>{puzzle.id}</td>

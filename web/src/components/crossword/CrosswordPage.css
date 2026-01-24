@@ -1,10 +1,10 @@
 .crossword-page {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start; 
-  padding: 2rem;
+  flex-direction: row; /* crossword+metadata on left, clues on right */
   gap: 20px;
-  min-height: 100vh;
+  justify-content: center;
+  align-items: flex-start;
+  height: 80vh; /* constrain height for scrollable clues */
+  padding: 2rem;
   box-sizing: border-box;
 }

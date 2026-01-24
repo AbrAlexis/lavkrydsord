@@ -1,20 +1,14 @@
 .clues-container {
   display: flex;
   flex-direction: column;
-  height: var(--grid-height); 
+  height: var(--grid-height);
   flex: 0 0 22rem;
-  min-width: 200px;
-  max-height: var(--grid-height); 
-  flex-shrink: 0;
-  
 }
 
 .clues-section {
   flex: 1;
-  min-height: 0; 
+  min-height: 0;
   overflow-y: auto;
   border: 1px solid #ccc;
   background: #fafafa;
-
 }
-

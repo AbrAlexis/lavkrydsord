@@ -67,3 +67,10 @@ export type ActiveClue = {
   number: number | null;
   direction: "across" | "down" | null;
 };
+
+export type PuzzleMetaData = {
+  id: number;
+  title: string;
+  author: string;
+  date: string;
+};

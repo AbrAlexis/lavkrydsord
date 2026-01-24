@@ -1,8 +1,10 @@
 import Crossword from "./components/Crossword";
 import Clues from "./components/clues/Clues.tsx";
+import MetaDataDisplayer from "./components/MetaDataDisplayer.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { isArrowKey } from "../../constants/BlockedCellChars.ts";
+import { useLocation } from "react-router-dom";
 import type {
   PuzzleData,
   Clue,
@@ -26,6 +28,11 @@ import { isBlockedCellChar } from "../../constants/BlockedCellChars.ts";
 
 function CrosswordPage() {
   const { puzzleId } = useParams<{ puzzleId: string }>();
+  const location = useLocation();
+  const { puzzleTitle, puzzleAuthor, puzzleDate } = location.state || {};
+  console.log("puzzleTitle", puzzleTitle);
+  console.log("puzzleAuthor", puzzleAuthor);
+  console.log("puzzleDate", puzzleDate);
   const id = Number(puzzleId);
   const [workingPuzzle, setWorkingPuzzle] = useState<string[][]>([]);
   const [clues, setClues] = useState<Clue[]>([]);
@@ -58,7 +65,7 @@ function CrosswordPage() {
     const cols = workingPuzzle[0]?.length ?? 0;
     const rows = workingPuzzle.length;
     const size = Math.floor(
-      (Math.min(window.innerWidth, window.innerHeight) * 0.9) /
+      (Math.min(window.innerWidth, window.innerHeight) * 0.8) /
         Math.max(1, cols)
     );
     return { cellSize: size, totalGridHeight: rows * size };
@@ -277,26 +284,46 @@ function CrosswordPage() {
   }, [crosswordState.selectedCell, crosswordState.direction, gridValues]);
 
   return (
-    <div
-      className="crossword-page"
-      style={{ "--grid-height": `${totalGridHeight}px` } as React.CSSProperties}
-    >
-      <Crossword
-        workingPuzzle={workingPuzzle}
-        cellSize={cellSize}
-        cellClueMaps={cellClueMaps}
-        clueNumberGrid={clueNumberGrid}
-        gridValues={gridValues}
-        crosswordState={crosswordState}
-        updateCrosswordState={updateCrosswordState}
+    <>
+      <MetaDataDisplayer
+        id={id}
+        title={puzzleTitle}
+        author={puzzleAuthor}
+        date={puzzleDate}
       />
-      <Clues
-        clues={clues}
-        onClick={handleClueClick}
-        crosswordState={crosswordState}
-        updateCrosswordState={updateCrosswordState}
-      />
-    </div>
+      <div
+        className="crossword-page"
+        style={
+          { "--grid-height": `${totalGridHeight}px` } as React.CSSProperties
+        }
+      >
+        <div>
+          <Crossword
+            workingPuzzle={workingPuzzle}
+            cellSize={cellSize}
+            cellClueMaps={cellClueMaps}
+            clueNumberGrid={clueNumberGrid}
+            gridValues={gridValues}
+            crosswordState={crosswordState}
+            updateCrosswordState={updateCrosswordState}
+          />
+
+          <MetaDataDisplayer
+            id={id}
+            title={puzzleTitle}
+            author={puzzleAuthor}
+            date={puzzleDate}
+          />
+        </div>
+
+        <Clues
+          clues={clues}
+          onClick={handleClueClick}
+          crosswordState={crosswordState}
+          updateCrosswordState={updateCrosswordState}
+        />
+      </div>
+    </>
   );
 }
 
